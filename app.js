@@ -815,6 +815,7 @@ function initTheme() {
 // ==========================================
 window.switchTab = function(tabId) {
     activeTab = tabId;
+    localStorage.setItem('activeTab', tabId);
     
     // Select all screens
     const screens = {
@@ -2412,9 +2413,24 @@ function renderProfile() {
     if (profileDisplayName) {
         profileDisplayName.textContent = username;
     }
-    renderAchievements();
-    renderGoals();
-    renderAvatar();
+    
+    try {
+        renderAchievements();
+    } catch (e) {
+        console.error("Error rendering achievements:", e);
+    }
+    
+    try {
+        renderGoals();
+    } catch (e) {
+        console.error("Error rendering goals:", e);
+    }
+    
+    try {
+        renderAvatar();
+    } catch (e) {
+        console.error("Error rendering avatar:", e);
+    }
 }
 
 window.enableProfileNameEdit = function() {
@@ -2509,8 +2525,9 @@ function init() {
         renderJournalTimeline();
     });
 
-    // Switch to default screen (Dashboard)
-    switchTab('dashboard');
+    // Switch to active tab or default to 'dashboard'
+    const savedTab = localStorage.getItem('activeTab') || 'dashboard';
+    switchTab(savedTab);
 
     // Register PWA Service worker
     registerServiceWorker();
