@@ -134,6 +134,14 @@
         .soft-card:active {
             transform: scale(0.97);
         }
+        /* Hide scrollbars for timeline sliders */
+        #habits-timeline-row, #journal-timeline-row {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        #habits-timeline-row::-webkit-scrollbar, #journal-timeline-row::-webkit-scrollbar {
+            display: none;  /* Chrome, Safari and Opera */
+        }
     </style>
 </head>
 <body class="bg-background text-on-surface min-h-screen pb-32">

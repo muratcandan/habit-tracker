@@ -1171,7 +1171,7 @@ function renderHabitsTimeline() {
         btn.innerHTML = `
             <span class="text-[11px] leading-none uppercase text-opacity-70">${day.label.substring(0, 1)}</span>
             <span class="text-xs font-bold leading-none mt-0.5">${day.dayNum}</span>
-            ${!isFuture && hasCompletions ? `<span class="w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-white' : 'bg-primary'} absolute -bottom-0.5 left-1/2 -translate-x-1/2"></span>` : ''}
+            ${!isFuture && hasCompletions ? `<span class="w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-white' : 'bg-primary'} absolute bottom-1 left-1/2 -translate-x-1/2"></span>` : ''}
         `;
 
         if (!isFuture) {
@@ -1733,7 +1733,7 @@ function renderJournalTimeline() {
         btn.innerHTML = `
             <span class="text-[11px] leading-none uppercase text-opacity-70">${day.label.substring(0, 1)}</span>
             <span class="text-xs font-bold leading-none mt-0.5">${day.dayNum}</span>
-            ${!isFuture && hasNote ? `<span class="w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-white' : 'bg-primary'} absolute -bottom-0.5 left-1/2 -translate-x-1/2"></span>` : ''}
+            ${!isFuture && hasNote ? `<span class="w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-white' : 'bg-primary'} absolute bottom-1 left-1/2 -translate-x-1/2"></span>` : ''}
         `;
 
         if (!isFuture) {
@@ -1874,7 +1874,7 @@ function renderDashboard() {
     renderTodayProgress();
     renderHabitsTimeline();
     renderHabitsList();
-    renderJournalTimeline();
+    selectJournalDate(selectedJournalDate); // Populates text area/mood AND renders the notes timeline
     loadSessionQuote();
 
     const habitsLabel = document.getElementById('habits-selected-date-label');
@@ -2735,10 +2735,17 @@ window.renderGoals = function() {
     }
     
     goals.forEach(goal => {
-        const daysLeft = window.getDaysRemaining(goal.targetDate);
+        let daysLeft = 0;
+        try {
+            daysLeft = window.getDaysRemaining(goal.targetDate);
+        } catch (e) {
+            console.error("Error calculating remaining days:", e);
+        }
         
         let countdownBadge = '';
-        if (daysLeft > 0) {
+        if (isNaN(daysLeft)) {
+            countdownBadge = `<span class="text-[11px] font-bold text-on-surface-variant bg-surface-container px-2.5 py-0.5 rounded-full flex items-center gap-0.5"><span class="material-symbols-outlined text-[12px]">schedule</span> Tarih Belirtilmedi</span>`;
+        } else if (daysLeft > 0) {
             countdownBadge = `<span class="text-[11px] font-bold text-primary bg-primary-container/20 px-2.5 py-0.5 rounded-full flex items-center gap-0.5"><span class="material-symbols-outlined text-[12px]">schedule</span> ${daysLeft} Gün Kaldı</span>`;
         } else if (daysLeft === 0) {
             countdownBadge = `<span class="text-[11px] font-bold text-[#f59e0b] bg-[#f59e0b]/20 px-2.5 py-0.5 rounded-full flex items-center gap-0.5"><span class="material-symbols-outlined text-[12px]">celebrate</span> Bugün Son Gün!</span>`;
@@ -2746,8 +2753,15 @@ window.renderGoals = function() {
             countdownBadge = `<span class="text-[11px] font-bold text-[#ba1a1a] bg-[#ffdad6]/40 px-2.5 py-0.5 rounded-full flex items-center gap-0.5"><span class="material-symbols-outlined text-[12px]">warning</span> Süre Doldu (${Math.abs(daysLeft)} gün geçti)</span>`;
         }
         
-        const d = new Date(goal.targetDate);
-        const targetStr = d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+        let targetStr = goal.targetDate || '';
+        try {
+            const d = new Date(goal.targetDate);
+            if (d instanceof Date && !isNaN(d)) {
+                targetStr = d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+            }
+        } catch (e) {
+            console.error("Error formatting target date:", e);
+        }
         
         const card = document.createElement('div');
         card.className = "soft-card p-md bg-white border border-surface-container shadow-[0_10px_15px_rgba(45,52,54,0.02)] flex items-center justify-between gap-sm hover:shadow-[0_15px_20px_rgba(45,52,54,0.04)] transition-all";
@@ -2764,8 +2778,8 @@ window.renderGoals = function() {
         }
 
         card.innerHTML = `
-            <div class="flex-1 space-y-1.5">
-                <div class="font-headline-sm text-[15px] text-on-surface font-bold leading-snug">${goal.title}</div>
+            <div class="flex-1 space-y-1.5 min-w-0">
+                <div class="font-headline-sm text-[15px] text-on-surface font-bold leading-snug truncate">${goal.title}</div>
                 <div class="flex flex-wrap items-center gap-sm">
                     <div class="text-[11px] text-on-surface-variant font-medium flex items-center gap-0.5">
                         <span class="material-symbols-outlined text-[13px]">calendar_today</span>
@@ -2775,7 +2789,7 @@ window.renderGoals = function() {
                     ${currentStatusHtml}
                 </div>
             </div>
-            <div class="flex items-center gap-1 opacity-0 hover:opacity-100 group-hover:opacity-100 transition-opacity duration-200">
+            <div class="flex items-center gap-1 opacity-0 hover:opacity-100 group-hover:opacity-100 transition-opacity duration-200 shrink-0">
                 <button class="p-1.5 rounded-full hover:bg-surface-container text-on-surface-variant/60 hover:text-on-surface transition-colors" onclick="editGoal('${goal.id}')" title="Düzenle">
                     <span class="material-symbols-outlined text-[18px]">edit</span>
                 </button>
