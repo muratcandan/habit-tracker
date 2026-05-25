@@ -819,29 +819,7 @@ window.switchTab = function(tabId) {
         'settings': document.getElementById('screen-settings')
     };
 
-    // Toggle screen visibility
-    Object.keys(screens).forEach(key => {
-        if (screens[key]) {
-            if (key === tabId) {
-                screens[key].classList.remove('hidden');
-                // Trigger screen-specific rendering
-                if (key === 'dashboard') {
-                    renderDashboard();
-                } else if (key === 'progress') {
-                    renderProgress();
-                } else if (key === 'profile') {
-                    renderProfile();
-                } else if (key === 'settings') {
-                    initTheme(); // Settings load fires theme binder
-                    initGlobalNotificationToggle(); // Bind global settings Switch
-                }
-            } else {
-                screens[key].classList.add('hidden');
-            }
-        }
-    });
-
-    // Update bottom nav active classes
+    // Update bottom nav active classes FIRST
     const navButtons = {
         'dashboard': document.getElementById('nav-btn-dashboard'),
         'progress': document.getElementById('nav-btn-progress'),
@@ -870,6 +848,32 @@ window.switchTab = function(tabId) {
             btn.className = "nav-btn flex-1 flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-2xl py-1.5 scale-110 active:scale-95 transition-all duration-200";
         } else {
             btn.className = "nav-btn flex-1 flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container rounded-2xl py-1.5 active:scale-95 transition-all duration-200";
+        }
+    });
+
+    // Toggle screen visibility and render screen-specific content
+    Object.keys(screens).forEach(key => {
+        if (screens[key]) {
+            if (key === tabId) {
+                screens[key].classList.remove('hidden');
+                // Trigger screen-specific rendering (wrapped in try-catch to keep app robust)
+                try {
+                    if (key === 'dashboard') {
+                        renderDashboard();
+                    } else if (key === 'progress') {
+                        renderProgress();
+                    } else if (key === 'profile') {
+                        renderProfile();
+                    } else if (key === 'settings') {
+                        initTheme(); // Settings load fires theme binder
+                        initGlobalNotificationToggle(); // Bind global settings Switch
+                    }
+                } catch (e) {
+                    console.error("Screen rendering error:", e);
+                }
+            } else {
+                screens[key].classList.add('hidden');
+            }
         }
     });
 };
@@ -1293,8 +1297,6 @@ function renderHabitsList() {
         if (habit.frequency === 'daily') {
             if (isCompletedOnDate) {
                 successBadge = `<span class="text-[11px] font-bold text-primary flex items-center gap-0.5 bg-primary-container/20 px-2.5 py-0.5 rounded-full"><span class="material-symbols-outlined text-[12px] font-bold">check</span>Bugün Yapıldı!</span>`;
-            } else {
-                successBadge = `<span class="text-[11px] font-bold text-[#ba1a1a] flex items-center gap-0.5 bg-[#ffdad6]/40 px-2.5 py-0.5 rounded-full"><span class="material-symbols-outlined text-[12px] font-bold">close</span>Bugün Yapılmadı</span>`;
             }
         } else if (habit.frequency === 'weekly') {
             const target = habit.targetCount || 3;

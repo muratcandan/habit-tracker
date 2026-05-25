@@ -156,13 +156,13 @@
     <!-- SCREEN 1: DASHBOARD -->
     <section id="screen-dashboard" class="screen-view px-container-padding py-md max-w-4xl mx-auto space-y-lg">
         <!-- Today's Progress Card -->
-        <div class="soft-card p-md shadow-[0_15px_20px_rgba(45,52,54,0.04)] border-l-4 border-primary">
-            <div class="flex justify-between items-end">
-                <div>
+        <div class="soft-card p-4 sm:p-md shadow-[0_15px_20px_rgba(45,52,54,0.04)] border-l-4 border-primary">
+            <div class="flex items-center justify-between gap-4">
+                <div class="min-w-0 flex-1">
                     <h2 class="font-headline-sm text-headline-sm">Bugünkü Durum</h2>
                     <p id="progress-summary-desc" class="font-body-md text-body-md text-on-surface-variant">5 alışkanlıktan 0 tanesini tamamladın!</p>
                 </div>
-                <div class="relative w-16 h-16 flex items-center justify-center">
+                <div class="relative w-16 h-16 flex items-center justify-center shrink-0">
                     <svg class="w-full h-full transform -rotate-90">
                         <circle class="text-surface-container" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="6"></circle>
                         <circle id="progress-circle-ring" class="text-primary transition-all duration-700" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="176" stroke-dashoffset="176" stroke-width="6"></circle>
@@ -414,7 +414,7 @@
         </section>
 
         <!-- Dynamic Insights Panel -->
-        <section class="bg-primary/5 rounded-3xl p-4 sm:p-lg flex flex-col md:flex-row items-center gap-sm sm:gap-lg border border-primary/10 cursor-pointer hover:bg-primary/10 transition-all duration-300" onclick="cycleAdvice()">
+        <section class="bg-primary/5 rounded-3xl p-4 sm:p-lg flex flex-col md:flex-row items-center gap-sm sm:gap-lg border border-primary/10 cursor-pointer hover:bg-primary/10 transition-all duration-300 min-h-[270px] sm:min-h-[160px]" onclick="cycleAdvice()">
             <div class="flex-1 space-y-sm">
                 <h3 id="insight-box-title" class="font-headline-sm text-headline-sm text-primary">Veri Analitiği</h3>
                 <p id="insight-box-desc" class="font-body-md text-body-md text-on-surface-variant">Uygulamayı kullanmaya başladıkça en başarılı olduğun günleri analiz edip sana özel tavsiyeler üreteceğiz!</p>
