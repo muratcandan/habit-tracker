@@ -58,7 +58,13 @@ let editingHabitId = null; // Track if we're inline editing a habit's name
 let selectedPerformanceRange = 'weekly'; // Toggles 'weekly', 'monthly' or 'yearly' performance grid
 let selectedActivityRange = 'weekly'; // Toggles 'weekly', 'monthly' or 'yearly' activity chart
 let selectedMoodRange = 'weekly'; // Toggles 'weekly', 'monthly' or 'yearly' mood chart
-let goals = JSON.parse(localStorage.getItem('goals')) || [];
+let goals = [];
+try {
+    goals = JSON.parse(localStorage.getItem('goals')) || [];
+    console.log("Goals loaded on startup from localStorage:", goals);
+} catch (e) {
+    console.error("Error loading goals from localStorage:", e);
+}
 let username = localStorage.getItem('username') || 'Kullanıcı Adı';
 let activityViewDate = getTodayString();
 let moodViewDate = getTodayString();
@@ -2719,6 +2725,7 @@ window.getDaysRemaining = function(targetDateStr) {
 };
 
 window.renderGoals = function() {
+    console.log("Rendering goals list. Current goals in memory:", goals.length, goals);
     const goalsContainer = document.getElementById('profile-goals-list');
     if (!goalsContainer) return;
     

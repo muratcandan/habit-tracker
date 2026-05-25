@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zinciri-kirma-v3';
+const CACHE_NAME = 'zinciri-kirma-v4';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
