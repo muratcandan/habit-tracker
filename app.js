@@ -46,6 +46,7 @@ let habits = JSON.parse(localStorage.getItem('habits')) || [
 
 let journal = JSON.parse(localStorage.getItem('journal')) || {};
 
+let bodyMeasurements = JSON.parse(localStorage.getItem('bodyMeasurements')) || [];
 let fitnessLogs = JSON.parse(localStorage.getItem('fitnessLogs')) || {};
 let fitnessTemplates = JSON.parse(localStorage.getItem('fitnessTemplates')) || [
     { id: "tpl-chest", name: "Göğüs Günü", exercises: ["Bench Press", "Incline Dumbbell Press", "Dumbbell Fly", "Dips"] },
@@ -793,6 +794,7 @@ function saveState() {
     localStorage.setItem('journal', JSON.stringify(journal));
     localStorage.setItem('fitnessLogs', JSON.stringify(fitnessLogs));
     localStorage.setItem('fitnessTemplates', JSON.stringify(fitnessTemplates));
+    localStorage.setItem('bodyMeasurements', JSON.stringify(bodyMeasurements));
 }
 
 // Premium System Toast Alerts
@@ -1399,6 +1401,7 @@ function renderHabitsList() {
         const card = document.createElement('div');
         card.className = `soft-card p-4 sm:p-md shadow-[0_15px_20px_rgba(45,52,54,0.03)] border-l-4 flex flex-col gap-sm bg-white relative overflow-hidden group transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_25px_rgba(45,52,54,0.05)]`;
         card.style.borderLeftColor = habitColor;
+        card.setAttribute('data-id', habit.id);
 
         if (isEditing) {
             card.innerHTML = `
@@ -1515,6 +1518,7 @@ function renderHabitsList() {
                     <!-- Left: Info & Title -->
                     <div class="flex-1 min-w-0 space-y-1">
                         <div class="flex items-center gap-2 flex-wrap">
+                            <span class="material-symbols-outlined text-[18px] text-on-surface-variant/40 drag-handle cursor-grab active:cursor-grabbing hover:text-primary transition-colors">drag_indicator</span>
                             <span class="font-headline-sm text-base sm:text-[18px] text-on-surface font-bold leading-snug truncate max-w-full" title="${habit.name}">${habit.name}</span>
                             ${streak > 0 ? `
                                 <div class="flex items-center gap-0.5 text-secondary font-label-sm font-bold bg-secondary-container/20 px-2 py-0.5 rounded-full scale-90 shrink-0" title="Mevcut Zincir">
@@ -1727,6 +1731,17 @@ window.toggleHabitDay = function(id, dateStr) {
             habit.history.splice(index, 1);
         } else {
             habit.history.push(dateStr);
+            if (window.confetti) {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#006b5a', '#7cd7c1', '#f59e0b', '#ffffff']
+                });
+            }
+            if (navigator.vibrate) {
+                navigator.vibrate(50);
+            }
         }
         saveState();
         renderDashboard();
@@ -1926,6 +1941,27 @@ function renderDashboard() {
     renderTodayProgress();
     renderHabitsTimeline();
     renderHabitsList();
+    
+    const habitListEl = document.getElementById('dashboard-habits-list');
+    if (habitListEl && window.Sortable) {
+        Sortable.create(habitListEl, {
+            animation: 150,
+            handle: '.drag-handle',
+            ghostClass: 'opacity-50',
+            onEnd: function () {
+                const newOrderIds = Array.from(habitListEl.children).map(el => el.getAttribute('data-id'));
+                habits.sort((a, b) => {
+                    const indexA = newOrderIds.indexOf(a.id);
+                    const indexB = newOrderIds.indexOf(b.id);
+                    if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+                    if (indexA !== -1) return -1;
+                    if (indexB !== -1) return 1;
+                    return 0;
+                });
+                saveState();
+            }
+        });
+    }
     selectJournalDate(selectedJournalDate); // Populates text area/mood AND renders the notes timeline
     loadSessionQuote();
 
@@ -3890,5 +3926,85 @@ window.renderFitnessChart = function() {
     descEl.textContent = `Son ${rangeDays} günde ${filteredHistory.length} günlük veri analiz edildi. (Son Kayıt: ${latestW}${unit.trim()})`;
 };
 
+// ==========================================
+// BODY MEASUREMENTS
+// ==========================================
+
+window.toggleBodyMeasurementForm = function() {
+    const form = document.getElementById('body-measurement-form');
+    if (form) {
+        form.classList.toggle('hidden');
+    }
+};
+
+window.saveBodyMeasurement = function() {
+    const weightInput = document.getElementById('bm-weight');
+    const fatInput = document.getElementById('bm-fat');
+    
+    const weight = parseFloat(weightInput.value);
+    const fat = parseFloat(fatInput.value) || null;
+    
+    if (isNaN(weight) || weight <= 0) {
+        alert("Lütfen geçerli bir kilo giriniz.");
+        return;
+    }
+    
+    const dateStr = getTodayString();
+    
+    // Check if entry for today exists
+    const existingIndex = bodyMeasurements.findIndex(m => m.date === dateStr);
+    if (existingIndex > -1) {
+        bodyMeasurements[existingIndex] = { date: dateStr, weight, fat };
+    } else {
+        bodyMeasurements.push({ date: dateStr, weight, fat });
+    }
+    
+    // Sort by date descending
+    bodyMeasurements.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    saveState();
+    renderMeasurements();
+    
+    weightInput.value = '';
+    fatInput.value = '';
+    toggleBodyMeasurementForm();
+    if (window.showToast) showToast('Ölçüm başarıyla kaydedildi.', 'success');
+};
+
+window.deleteMeasurement = function(dateStr) {
+    if (confirm('Bu ölçümü silmek istediğinize emin misiniz?')) {
+        bodyMeasurements = bodyMeasurements.filter(m => m.date !== dateStr);
+        saveState();
+        renderMeasurements();
+        if (window.showToast) showToast('Ölçüm silindi.', 'info');
+    }
+};
+
+window.renderMeasurements = function() {
+    const listEl = document.getElementById('body-measurements-list');
+    if (!listEl) return;
+    
+    listEl.innerHTML = '';
+    
+    if (bodyMeasurements.length === 0) {
+        listEl.innerHTML = '<p class="text-sm text-on-surface-variant text-center py-4">Henüz ölçüm kaydı yok.</p>';
+        return;
+    }
+    
+    bodyMeasurements.forEach(m => {
+        const item = document.createElement('div');
+        item.className = 'flex items-center justify-between bg-surface-container-low p-3 rounded-xl border border-surface-container-high/40 text-sm';
+        item.innerHTML = `
+            <div class="flex flex-col">
+                <span class="font-bold text-on-surface">${m.weight} kg ${m.fat ? `<span class="text-on-surface-variant text-xs font-normal ml-1">(${m.fat}%)</span>` : ''}</span>
+                <span class="text-xs text-on-surface-variant">${formatHumanDate(m.date)}</span>
+            </div>
+            <button onclick="deleteMeasurement('${m.date}')" class="text-on-surface-variant/40 hover:text-error transition-colors p-1"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+        `;
+        listEl.appendChild(item);
+    });
+};
+
 // Boot
+renderMeasurements();
 init();

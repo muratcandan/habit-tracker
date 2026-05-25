@@ -476,6 +476,24 @@
             </button>
         </div>
 
+        <!-- Body Measurements -->
+        <section class="soft-card p-4 sm:p-lg shadow-[0_15px_20px_rgba(45,52,54,0.04)] mx-2 mb-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-headline-sm text-headline-sm flex items-center gap-2"><span class="material-symbols-outlined text-primary">scale</span> Vücut Ölçüleri</h3>
+                <button onclick="toggleBodyMeasurementForm()" class="text-primary hover:bg-primary/10 p-2 rounded-full transition-colors material-symbols-outlined">add</button>
+            </div>
+            
+            <div id="body-measurement-form" class="hidden flex flex-wrap gap-2 mb-4 bg-surface-container-lowest p-3 rounded-2xl border border-surface-container-high/50">
+                <input type="number" id="bm-weight" placeholder="Kilo (kg)" step="0.1" class="flex-1 min-w-[80px] bg-surface-container-low border-none rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary-container outline-none m-0">
+                <input type="number" id="bm-fat" placeholder="Yağ (%)" step="0.1" class="flex-1 min-w-[80px] bg-surface-container-low border-none rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-primary-container outline-none m-0">
+                <button onclick="saveBodyMeasurement()" class="bg-primary text-white p-2 rounded-xl hover:bg-primary/90 material-symbols-outlined w-full sm:w-auto mt-2 sm:mt-0">check</button>
+            </div>
+
+            <div id="body-measurements-list" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                <!-- Measurements will be injected here -->
+            </div>
+        </section>
+
         <!-- Fitness Templates Overlay Modal (Hidden by default) -->
         <div id="fitness-template-modal" class="hidden fixed inset-0 z-[100] bg-surface/95 dark:bg-[#121415]/95 backdrop-blur-sm flex-col max-w-md mx-auto md:inset-y-12 md:rounded-3xl md:shadow-2xl md:border md:border-surface-container-high/40 overflow-hidden">
             <!-- View 1: List View -->
@@ -974,6 +992,8 @@
         </button>
     </nav>
 
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
