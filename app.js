@@ -217,6 +217,7 @@ window.toggleReminderTimeGroup = function() {
     if (toggle && timeGroup) {
         if (toggle.checked) {
             timeGroup.classList.remove('hidden');
+            if (window.requestNotificationPermission) window.requestNotificationPermission();
         } else {
             timeGroup.classList.add('hidden');
         }
@@ -230,9 +231,28 @@ window.toggleEditReminderTimeGroup = function(id) {
     if (toggle && timeGroup) {
         if (toggle.checked) {
             timeGroup.classList.remove('hidden');
+            if (window.requestNotificationPermission) window.requestNotificationPermission();
         } else {
             timeGroup.classList.add('hidden');
         }
+    }
+};
+
+window.toggleDayChip = function(btn) {
+    const isSelected = btn.classList.contains('bg-primary');
+    if (isSelected) {
+        btn.className = "day-chip w-9 h-9 rounded-full bg-surface-container text-on-surface-variant font-bold text-xs flex items-center justify-center transition-all select-none";
+    } else {
+        btn.className = "day-chip w-9 h-9 rounded-full bg-primary text-white font-bold text-xs flex items-center justify-center transition-all select-none";
+    }
+};
+
+window.toggleEditDayChip = function(btn, id) {
+    const isSelected = btn.classList.contains('bg-primary');
+    if (isSelected) {
+        btn.className = `edit-day-chip-${id} w-7 h-7 rounded-full bg-surface-container text-on-surface-variant font-bold text-[10px] flex items-center justify-center transition-all select-none`;
+    } else {
+        btn.className = `edit-day-chip-${id} w-7 h-7 rounded-full bg-primary text-white font-bold text-[10px] flex items-center justify-center transition-all select-none`;
     }
 };
 
@@ -1004,7 +1024,11 @@ function initAddHabitForm() {
             }
 
             const reminderTimeInput = document.getElementById('add-habit-reminder-time');
-            const reminderDayInput = document.getElementById('add-habit-reminder-day');
+            
+            // Get selected reminder days from chips
+            const selectedChips = document.querySelectorAll('#add-habit-reminder-time-group .day-chip.bg-primary');
+            const selectedDays = Array.from(selectedChips).map(c => c.getAttribute('data-day'));
+            const reminderDaysStr = selectedDays.length === 7 ? 'Her Gün' : (selectedDays.length === 0 ? 'Hiçbir Gün' : selectedDays.join(', '));
 
             let newHabit = {
                 id: Date.now().toString(),
@@ -1015,7 +1039,7 @@ function initAddHabitForm() {
                 targetCount: target,
                 reminderEnabled: reminderToggle ? reminderToggle.checked : true,
                 reminderTime: reminderTimeInput ? reminderTimeInput.value : '09:00',
-                reminderDay: (selectedFrequency !== 'daily' && reminderDayInput) ? reminderDayInput.value : '',
+                reminderDay: reminderDaysStr,
                 history: []
             };
 
@@ -1033,6 +1057,12 @@ function initAddHabitForm() {
             customCatInput.value = '';
             customEmojiInput.value = '';
             if (reminderToggle) reminderToggle.checked = true;
+            
+            // Reset day chips to selected
+            const addChips = document.querySelectorAll('#add-habit-reminder-time-group .day-chip');
+            addChips.forEach(c => {
+                c.className = "day-chip w-9 h-9 rounded-full bg-primary text-white font-bold text-xs flex items-center justify-center transition-all select-none";
+            });
             
             const customGrp = document.getElementById('custom-category-group');
             if (customGrp) customGrp.classList.add('hidden');
@@ -1421,11 +1451,17 @@ function renderHabitsList() {
                                 <span class="text-[11px] font-bold text-on-surface-variant">Bildirim Saati</span>
                                 <input type="time" id="edit-habit-reminder-time-${habit.id}" value="${habit.reminderTime || '09:00'}" class="bg-white border-none rounded-lg py-1 px-2 text-xs font-body-md text-on-surface focus:ring-2 focus:ring-primary-container outline-none" />
                             </div>
-                            <div id="edit-habit-reminder-day-container-${habit.id}" class="${habit.frequency === 'daily' ? 'hidden' : ''} flex items-center justify-between">
-                                <span class="text-[11px] font-bold text-on-surface-variant">Bildirim Günü</span>
-                                <select id="edit-habit-reminder-day-${habit.id}" class="bg-white border-none rounded-lg py-1 px-2 text-xs font-body-md text-on-surface focus:ring-2 focus:ring-primary-container outline-none">
-                                    <!-- Populated by JS -->
-                                </select>
+                            <div class="flex flex-col gap-1.5 mt-1">
+                                <span class="text-[11px] font-bold text-on-surface-variant">Bildirim Günleri (Çoklu Seçim)</span>
+                                <div class="flex justify-between gap-1 w-full bg-white p-1.5 rounded-xl border border-surface-container shadow-inner" id="edit-habit-reminder-days-container-${habit.id}">
+                                    <button type="button" class="edit-day-chip-${habit.id} w-7 h-7 rounded-full ${!habit.reminderDay || habit.reminderDay.includes('Pazartesi') || habit.reminderDay === 'Her Gün' ? 'bg-primary text-white' : 'bg-surface-container text-on-surface-variant'} font-bold text-[10px] flex items-center justify-center transition-all select-none" data-day="Pazartesi" onclick="toggleEditDayChip(this, '${habit.id}')">P</button>
+                                    <button type="button" class="edit-day-chip-${habit.id} w-7 h-7 rounded-full ${!habit.reminderDay || habit.reminderDay.includes('Salı') || habit.reminderDay === 'Her Gün' ? 'bg-primary text-white' : 'bg-surface-container text-on-surface-variant'} font-bold text-[10px] flex items-center justify-center transition-all select-none" data-day="Salı" onclick="toggleEditDayChip(this, '${habit.id}')">S</button>
+                                    <button type="button" class="edit-day-chip-${habit.id} w-7 h-7 rounded-full ${!habit.reminderDay || habit.reminderDay.includes('Çarşamba') || habit.reminderDay === 'Her Gün' ? 'bg-primary text-white' : 'bg-surface-container text-on-surface-variant'} font-bold text-[10px] flex items-center justify-center transition-all select-none" data-day="Çarşamba" onclick="toggleEditDayChip(this, '${habit.id}')">Ç</button>
+                                    <button type="button" class="edit-day-chip-${habit.id} w-7 h-7 rounded-full ${!habit.reminderDay || habit.reminderDay.includes('Perşembe') || habit.reminderDay === 'Her Gün' ? 'bg-primary text-white' : 'bg-surface-container text-on-surface-variant'} font-bold text-[10px] flex items-center justify-center transition-all select-none" data-day="Perşembe" onclick="toggleEditDayChip(this, '${habit.id}')">P</button>
+                                    <button type="button" class="edit-day-chip-${habit.id} w-7 h-7 rounded-full ${!habit.reminderDay || habit.reminderDay.includes('Cuma') || habit.reminderDay === 'Her Gün' ? 'bg-primary text-white' : 'bg-surface-container text-on-surface-variant'} font-bold text-[10px] flex items-center justify-center transition-all select-none" data-day="Cuma" onclick="toggleEditDayChip(this, '${habit.id}')">C</button>
+                                    <button type="button" class="edit-day-chip-${habit.id} w-7 h-7 rounded-full ${!habit.reminderDay || habit.reminderDay.includes('Cumartesi') || habit.reminderDay === 'Her Gün' ? 'bg-primary text-white' : 'bg-surface-container text-on-surface-variant'} font-bold text-[10px] flex items-center justify-center transition-all select-none" data-day="Cumartesi" onclick="toggleEditDayChip(this, '${habit.id}')">C</button>
+                                    <button type="button" class="edit-day-chip-${habit.id} w-7 h-7 rounded-full ${!habit.reminderDay || habit.reminderDay.includes('Pazar') || habit.reminderDay === 'Her Gün' ? 'bg-primary text-white' : 'bg-surface-container text-on-surface-variant'} font-bold text-[10px] flex items-center justify-center transition-all select-none" data-day="Pazar" onclick="toggleEditDayChip(this, '${habit.id}')">P</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1532,9 +1568,7 @@ window.editHabitName = function(id) {
                 input.focus();
                 input.select();
             }
-            if (habit.frequency !== 'daily') {
-                populateEditReminderDays(id, habit.frequency, habit.reminderDay);
-            }
+            // populateEditReminderDays is deprecated, we use static weekday chips directly
         }
     }, 50);
 };
@@ -1560,16 +1594,13 @@ window.onEditFrequencyChange = function(id) {
     const freqSelect = document.getElementById(`edit-habit-frequency-${id}`);
     const targetGroup = document.getElementById(`edit-habit-target-group-${id}`);
     const targetInput = document.getElementById(`edit-habit-target-${id}`);
-    const dayContainer = document.getElementById(`edit-habit-reminder-day-container-${id}`);
     
     if (freqSelect) {
         const freq = freqSelect.value;
         if (freq === 'daily') {
             if (targetGroup) targetGroup.classList.add('hidden');
-            if (dayContainer) dayContainer.classList.add('hidden');
         } else {
             if (targetGroup) targetGroup.classList.remove('hidden');
-            if (dayContainer) dayContainer.classList.remove('hidden');
             
             if (targetInput) {
                 if (freq === 'weekly') {
@@ -1579,17 +1610,11 @@ window.onEditFrequencyChange = function(id) {
                     targetInput.max = 30;
                 }
             }
-            populateEditReminderDays(id, freq);
         }
     }
 };
 
-window.populateEditReminderDays = function(id, freq, currentDay = '') {
-    const daySelect = document.getElementById(`edit-habit-reminder-day-${id}`);
-    if (daySelect) {
-        populateReminderDays(daySelect, freq, currentDay);
-    }
-};
+// populateEditReminderDays is removed
 
 window.saveHabitName = function(id) {
     const habit = habits.find(h => h.id === id);
@@ -1632,21 +1657,23 @@ window.saveHabitName = function(id) {
         habit.frequency = freqSelect.value;
         if (habit.frequency === 'daily') {
             habit.targetCount = 1;
-            habit.reminderDay = '';
         } else {
             habit.targetCount = targetInput ? Math.max(1, parseInt(targetInput.value) || 1) : 1;
-            if (reminderDaySelect) {
-                habit.reminderDay = reminderDaySelect.value;
-            }
         }
     }
     
     if (reminderToggle) {
         habit.reminderEnabled = reminderToggle.checked;
-    }
-    
-    if (reminderTimeInput) {
-        habit.reminderTime = reminderTimeInput.value;
+        if (reminderTimeInput) {
+            habit.reminderTime = reminderTimeInput.value;
+        }
+        
+        // Get selected reminder days from chips
+        const editChips = document.querySelectorAll(`#edit-habit-reminder-days-container-${id} .edit-day-chip-${id}.bg-primary`);
+        const editDays = Array.from(editChips).map(c => c.getAttribute('data-day'));
+        const editDaysStr = editDays.length === 7 ? 'Her Gün' : (editDays.length === 0 ? 'Hiçbir Gün' : editDays.join(', '));
+        
+        habit.reminderDay = editDaysStr;
     }
     
     if (selectedColorHex) {
@@ -2373,8 +2400,116 @@ function initGlobalNotificationToggle() {
             localStorage.setItem('globalNotificationsEnabled', toggle.checked);
             const status = toggle.checked ? 'aktif edildi 🔔' : 'kapatıldı 🔕';
             showToast(`Genel bildirimler ${status}`, 'success');
+            
+            // Request permission on toggle gesture if checked
+            if (toggle.checked) {
+                if (window.requestNotificationPermission) window.requestNotificationPermission();
+            }
+            
+            renderGlobalNotificationStatus();
         };
     }
+    renderGlobalNotificationStatus();
+}
+
+// Render the beautiful Dynamic Notification Status Panel
+function renderGlobalNotificationStatus() {
+    const container = document.getElementById('settings-notification-status-container');
+    if (!container) return;
+
+    const globalEnabled = localStorage.getItem('globalNotificationsEnabled') !== 'false';
+    if (!globalEnabled) {
+        container.innerHTML = `
+            <div class="p-3 bg-surface-container rounded-2xl flex items-center justify-between text-left">
+                <span class="text-xs text-on-surface-variant/80 font-medium leading-relaxed">Genel bildirimler kapalı olduğundan hatırlatıcılar gönderilmeyecektir.</span>
+            </div>
+        `;
+        return;
+    }
+
+    if (!('Notification' in window)) {
+        container.innerHTML = `
+            <div class="p-3 bg-error-container/20 text-error rounded-2xl flex items-center gap-xs text-left">
+                <span class="material-symbols-outlined text-[16px]">error</span>
+                <span class="text-xs font-semibold">Tarayıcınız bildirim desteği sunmuyor.</span>
+            </div>
+        `;
+        return;
+    }
+
+    const permission = Notification.permission;
+
+    if (permission === 'default') {
+        container.innerHTML = `
+            <div class="flex flex-col gap-sm bg-primary-container/20 p-4 rounded-2xl border border-primary-container/30 shadow-sm text-left">
+                <span class="text-xs text-on-primary-container font-semibold leading-relaxed">Hatırlatıcı bildirimlerini alabilmek için tarayıcınızdan bildirim izni vermeniz gerekmektedir.</span>
+                <button type="button" id="btn-request-permission-settings" class="bg-primary text-white font-label-md px-4 py-2 rounded-xl active:scale-95 transition-all text-xs font-bold inline-flex items-center justify-center gap-1 self-start shadow-sm hover:shadow">
+                    <span class="material-symbols-outlined text-xs">notifications_active</span>
+                    Bildirim İznini Etkinleştir
+                </button>
+            </div>
+        `;
+
+        const btn = document.getElementById('btn-request-permission-settings');
+        if (btn) {
+            btn.onclick = () => {
+                Notification.requestPermission().then(res => {
+                    renderGlobalNotificationStatus();
+                    if (res === 'granted') {
+                        showToast('Harika! Bildirim izni onaylandı. 🎉', 'success');
+                        sendImmediateTestNotification();
+                    } else if (res === 'denied') {
+                        showToast('Bildirim izni reddedildi. Ayarlardan açabilirsiniz.', 'error');
+                    }
+                });
+            };
+        }
+    } else if (permission === 'denied') {
+        container.innerHTML = `
+            <div class="flex flex-col gap-xs bg-error-container/10 p-4 rounded-2xl border border-error/20 text-left">
+                <span class="text-xs text-on-surface-variant font-semibold leading-relaxed">Bildirim izni engellenmiş. Hatırlatıcıları almak için tarayıcınızın adres çubuğundaki kilit simgesine veya tarayıcı ayarlarına gidip bildirimlere izin vermelisiniz.</span>
+            </div>
+        `;
+    } else if (permission === 'granted') {
+        container.innerHTML = `
+            <div class="flex flex-col gap-sm bg-primary-container/10 p-4 rounded-2xl border border-primary/20 text-left">
+                <div class="flex items-center gap-xs text-primary font-bold text-xs">
+                    <span class="material-symbols-outlined text-xs">check_circle</span>
+                    <span>Sistem Bildirimleri Aktif 🟢</span>
+                </div>
+                <span class="text-[11px] text-on-surface-variant/80">Harika! Tarayıcınızda bildirim izinleri tanımlı. Hatırlatıcılarınızı test etmek için aşağıdaki butona tıklayabilirsiniz.</span>
+                <button type="button" id="btn-test-notification" class="bg-surface-container text-on-surface font-label-md px-4 py-2 rounded-xl active:scale-95 transition-all text-xs font-bold inline-flex items-center justify-center gap-1 self-start shadow-sm hover:shadow">
+                    <span class="material-symbols-outlined text-xs text-primary">send</span>
+                    Test Bildirimi Gönder
+                </button>
+            </div>
+        `;
+
+        const testBtn = document.getElementById('btn-test-notification');
+        if (testBtn) {
+            testBtn.onclick = () => {
+                sendImmediateTestNotification();
+            };
+        }
+    }
+}
+
+function sendImmediateTestNotification() {
+    const options = {
+        body: 'Tebrikler, Habit Tracker bildirim sisteminiz başarıyla çalışıyor! 🚀',
+        icon: './icons/icon.svg',
+        badge: './icons/icon.svg',
+        vibrate: [200, 100, 200]
+    };
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.ready.then(reg => {
+            reg.showNotification('Alışkanlık Hatırlatıcısı 🔔', options);
+        });
+    } else {
+        new Notification('Alışkanlık Hatırlatıcısı 🔔', options);
+    }
+    showToast('Test bildirimi gönderildi! 📱', 'success');
 }
 
 function initBackupAction() {
@@ -2529,8 +2664,128 @@ function init() {
     const savedTab = localStorage.getItem('activeTab') || 'dashboard';
     switchTab(savedTab);
 
+    // Start background notification scheduler
+    startNotificationScheduler();
+
     // Register PWA Service worker
     registerServiceWorker();
+}
+
+// ==========================================
+// CLIENT-SIDE LOCAL NOTIFICATION SCHEDULER
+// ==========================================
+function checkAndTriggerNotifications() {
+    // 1. Check if notifications are globally enabled
+    const globalEnabled = localStorage.getItem('globalNotificationsEnabled') !== 'false';
+    if (!globalEnabled) return;
+
+    // 2. Check browser permission
+    if (!('Notification' in window) || Notification.permission !== 'granted') return;
+
+    // 3. Get current time & day
+    const now = new Date();
+    const currentHourMin = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const weekdaysTR = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+    const currentWeekday = weekdaysTR[now.getDay()];
+    const currentDayOfMonth = `${now.getDate()}. Gün`;
+
+    // Load last triggered map to prevent double alerts in the same minute
+    let lastTriggered = JSON.parse(localStorage.getItem('lastTriggeredNotifications')) || {};
+
+    habits.forEach(h => {
+        // Must have reminders enabled, matching time, and not completed today
+        if (!h.reminderEnabled || h.reminderTime !== currentHourMin) return;
+        
+        // If already completed today, don't trigger alert
+        if (h.history && h.history.includes(todayStr)) return;
+
+        // Check matching day
+        let isMatchDay = false;
+        if (!h.reminderDay || h.reminderDay === 'Her Gün' || h.reminderDay === '') {
+            isMatchDay = true;
+        } else {
+            // Split multiple selected days
+            const daysList = h.reminderDay.split(',').map(d => d.trim());
+            if (daysList.includes(currentWeekday) || daysList.includes(currentDayOfMonth)) {
+                isMatchDay = true;
+            }
+        }
+
+        if (!isMatchDay) return;
+
+        // Debounce: check if already triggered in the last 2 hours (to be safe across minute boundaries)
+        const triggerKey = `${h.id}-${todayStr}-${currentHourMin}`;
+        if (lastTriggered[triggerKey]) return;
+
+        // Trigger notification!
+        const options = {
+            body: `"${h.name}" alışkanlığını tamamlama zamanı geldi! Zinciri kırma 🚀`,
+            icon: './icons/icon.svg',
+            badge: './icons/icon.svg',
+            vibrate: [200, 100, 200]
+        };
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.ready.then(reg => {
+                reg.showNotification('Alışkanlık Hatırlatıcısı 🔔', options);
+            });
+        } else {
+            new Notification('Alışkanlık Hatırlatıcısı 🔔', options);
+        }
+
+        // Mark as triggered
+        lastTriggered[triggerKey] = true;
+        
+        // Cleanup old keys from lastTriggered to keep localStorage clean (older than 2 days)
+        const twoDaysAgo = new Date();
+        twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+        const twoDaysAgoStr = `${twoDaysAgo.getFullYear()}-${String(twoDaysAgo.getMonth() + 1).padStart(2, '0')}-${String(twoDaysAgo.getDate()).padStart(2, '0')}`;
+        Object.keys(lastTriggered).forEach(key => {
+            if (key.includes('-') && !key.includes(todayStr) && !key.includes(twoDaysAgoStr)) {
+                delete lastTriggered[key];
+            }
+        });
+
+        localStorage.setItem('lastTriggeredNotifications', JSON.stringify(lastTriggered));
+    });
+}
+
+window.requestNotificationPermission = function() {
+    if ('Notification' in window) {
+        if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    showToast('Bildirim izni onaylandı! 🔔', 'success');
+                    if (typeof sendImmediateTestNotification === 'function') {
+                        sendImmediateTestNotification();
+                    }
+                }
+                if (typeof renderGlobalNotificationStatus === 'function') {
+                    renderGlobalNotificationStatus();
+                }
+            });
+        }
+    }
+};
+
+function startNotificationScheduler() {
+    // Request permission on start if appropriate
+    window.requestNotificationPermission();
+    
+    // Check immediately and then every 20 seconds
+    checkAndTriggerNotifications();
+    setInterval(checkAndTriggerNotifications, 20000);
+
+    // Run immediately when page gains focus to bypass background suspension
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+            checkAndTriggerNotifications();
+            if (typeof renderGlobalNotificationStatus === 'function') {
+                renderGlobalNotificationStatus();
+            }
+        }
+    });
 }
 
 // ==========================================

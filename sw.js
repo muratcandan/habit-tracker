@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zinciri-kirma-v5';
+const CACHE_NAME = 'zinciri-kirma-v6';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -57,6 +57,24 @@ self.addEventListener('fetch', event => {
             .catch(() => {
                 // Fallback to cache when offline
                 return caches.match(event.request);
+            })
+    );
+});
+
+// Notification Click Event: Focus or Open PWA window
+self.addEventListener('notificationclick', event => {
+    event.notification.close();
+    event.waitUntil(
+        clients.matchAll({ type: 'window', includeUncontrolled: true })
+            .then(clientList => {
+                for (const client of clientList) {
+                    if ('focus' in client) {
+                        return client.focus();
+                    }
+                }
+                if (clients.openWindow) {
+                    return clients.openWindow('./');
+                }
             })
     );
 });

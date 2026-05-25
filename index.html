@@ -539,12 +539,18 @@
                     <label class="font-label-sm text-label-sm text-on-surface-variant font-bold">Bildirim Saati</label>
                     <input type="time" id="add-habit-reminder-time" class="bg-white border-none rounded-xl py-1.5 px-3 font-body-md text-on-surface focus:ring-2 focus:ring-primary-container outline-none" value="09:00" />
                 </div>
-                <!-- Conditional day selector (weekly/monthly) -->
-                <div id="add-habit-reminder-day-container" class="hidden flex items-center justify-between mt-sm">
-                    <label id="add-habit-reminder-day-label" class="font-label-sm text-label-sm text-on-surface-variant font-bold">Bildirim Günü</label>
-                    <select id="add-habit-reminder-day" class="bg-white border-none rounded-xl py-1.5 px-3 font-body-md text-on-surface focus:ring-2 focus:ring-primary-container outline-none">
-                        <!-- Populated by JS -->
-                    </select>
+                <!-- Multi-select Weekdays Chip List -->
+                <div class="flex flex-col gap-xs mt-1">
+                    <label class="font-label-sm text-label-sm text-on-surface-variant font-bold">Bildirim Günleri (Çoklu Seçim)</label>
+                    <div class="flex justify-between gap-1 w-full bg-white p-2 rounded-2xl border border-surface-container shadow-inner">
+                        <button type="button" class="day-chip w-9 h-9 rounded-full bg-primary text-white font-bold text-xs flex items-center justify-center transition-all select-none" data-day="Pazartesi" onclick="toggleDayChip(this)">P</button>
+                        <button type="button" class="day-chip w-9 h-9 rounded-full bg-primary text-white font-bold text-xs flex items-center justify-center transition-all select-none" data-day="Salı" onclick="toggleDayChip(this)">S</button>
+                        <button type="button" class="day-chip w-9 h-9 rounded-full bg-primary text-white font-bold text-xs flex items-center justify-center transition-all select-none" data-day="Çarşamba" onclick="toggleDayChip(this)">Ç</button>
+                        <button type="button" class="day-chip w-9 h-9 rounded-full bg-primary text-white font-bold text-xs flex items-center justify-center transition-all select-none" data-day="Perşembe" onclick="toggleDayChip(this)">P</button>
+                        <button type="button" class="day-chip w-9 h-9 rounded-full bg-primary text-white font-bold text-xs flex items-center justify-center transition-all select-none" data-day="Cuma" onclick="toggleDayChip(this)">C</button>
+                        <button type="button" class="day-chip w-9 h-9 rounded-full bg-primary text-white font-bold text-xs flex items-center justify-center transition-all select-none" data-day="Cumartesi" onclick="toggleDayChip(this)">C</button>
+                        <button type="button" class="day-chip w-9 h-9 rounded-full bg-primary text-white font-bold text-xs flex items-center justify-center transition-all select-none" data-day="Pazar" onclick="toggleDayChip(this)">P</button>
+                    </div>
                 </div>
             </div>
 
@@ -723,6 +729,11 @@
                         <input type="checkbox" id="settings-notifications-toggle" class="sr-only peer" checked>
                         <div class="w-11 h-6 bg-surface-container rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-surface-variant after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                     </label>
+                </div>
+
+                <!-- Dynamic Notification Permissions & Test Area -->
+                <div id="settings-notification-status-container" class="px-5 pb-5">
+                    <!-- Dynamic state will be rendered here by JS -->
                 </div>
 
                 <div class="h-[1px] bg-surface-container mx-5"></div>
