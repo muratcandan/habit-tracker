@@ -1,0 +1,786 @@
+:root {
+    /* Luminous Vitality - Light Theme (Default) */
+    --bg-color: #f8f9fa;
+    --text-primary: #191c1d;
+    --text-secondary: #3e4946;
+    --glass-bg: #ffffff;
+    --glass-border: rgba(0, 0, 0, 0.05);
+    --primary-color: #006b5a; /* Soft Mint */
+    --primary-hover: #005f50;
+    --success-color: #006b5a;
+    --danger-color: #ba1a1a;
+    
+    --card-hover-border: rgba(0, 0, 0, 0.08);
+    --input-bg: #f3f4f5;
+    --days-row-bg: #edeeef;
+    --day-btn-bg: #ffffff;
+    --day-btn-border: #e1e3e4;
+    
+    --bg-gradient-mesh: radial-gradient(circle at 50% 20%, rgba(126, 217, 195, 0.25) 0%, rgba(254, 138, 124, 0.06) 50%, rgba(0,0,0,0) 100%);
+    --shadow-soft: 0 16px 32px rgba(45, 52, 54, 0.05);
+    --shadow-active: 0 4px 8px rgba(45, 52, 54, 0.03);
+    
+    --transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+[data-theme="dark"] {
+    /* Luminous Vitality - Dark Night Theme */
+    --bg-color: #121415;
+    --text-primary: #f0f1f2;
+    --text-secondary: #a3adab;
+    --glass-bg: rgba(25, 28, 29, 0.95);
+    --glass-border: rgba(255, 255, 255, 0.05);
+    --primary-color: #7cd7c1; /* Inverse Primary Teal */
+    --primary-hover: #98f4dd;
+    --success-color: #7cd7c1;
+    --danger-color: #ffb4aa;
+    
+    --card-hover-border: rgba(255, 255, 255, 0.08);
+    --input-bg: rgba(0, 0, 0, 0.25);
+    --days-row-bg: rgba(0, 0, 0, 0.15);
+    --day-btn-bg: rgba(255, 255, 255, 0.03);
+    --day-btn-border: rgba(255, 255, 255, 0.08);
+    
+    --bg-gradient-mesh: radial-gradient(circle at 50% 20%, rgba(124, 215, 193, 0.15) 0%, rgba(254, 138, 124, 0.03) 50%, rgba(0,0,0,0) 100%);
+    --shadow-soft: 0 16px 32px rgba(0, 0, 0, 0.4);
+    --shadow-active: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Quicksand', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    overflow-x: hidden;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Sophisticated Soft Mesh Background */
+.bg-gradient-glow {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background: var(--bg-gradient-mesh);
+    z-index: -1;
+    pointer-events: none;
+    filter: blur(40px);
+    transition: background 0.3s ease;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    z-index: 1;
+}
+
+/* Glassmorphism/Soft UI Panels */
+.glass-panel {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px; /* Generous 24px large corners */
+    padding: 24px;
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition);
+}
+
+.glass-panel:hover {
+    border-color: var(--card-hover-border);
+    transform: translateY(-2px);
+}
+
+/* Header & Logo styling */
+.app-header {
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.app-logo {
+    filter: drop-shadow(0 4px 8px rgba(0, 107, 90, 0.15));
+}
+
+.logo-text h1 {
+    font-size: 1.45rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 1px;
+}
+
+/* Theme Toggle Button */
+.btn-theme {
+    background: var(--day-btn-bg);
+    border: 1px solid var(--day-btn-border);
+    color: var(--text-primary);
+    padding: 10px;
+    border-radius: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.btn-theme:hover {
+    background: rgba(0, 107, 90, 0.08);
+    border-color: rgba(0, 107, 90, 0.15);
+    transform: scale(1.05);
+}
+
+h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Today's Status/Mood Card (Vibrant Pastels) */
+.status-mood-card {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-radius: 24px;
+    border: 1px solid var(--glass-border);
+    transition: var(--transition);
+}
+
+.status-mood-content {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.status-emoji {
+    font-size: 2.4rem;
+    line-height: 1;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+    transition: var(--transition);
+    animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.status-text-area h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* Color Coding status card with soft pastels */
+.status-mood-card.status-red {
+    border-left: 5px solid var(--danger-color);
+    background: linear-gradient(135deg, rgba(254, 138, 124, 0.1) 0%, var(--glass-bg) 100%);
+}
+
+.status-mood-card.status-neutral {
+    border-left: 5px solid #f59e0b;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, var(--glass-bg) 100%);
+}
+
+.status-mood-card.status-green {
+    border-left: 5px solid var(--success-color);
+    background: linear-gradient(135deg, rgba(126, 217, 195, 0.1) 0%, var(--glass-bg) 100%);
+}
+
+/* Buttons (Squishy scaling on click) */
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    border-radius: 16px; /* 16px buttons */
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+button:active {
+    transform: scale(0.96); /* squishy bouncy feel */
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: #fff;
+    padding: 10px 18px;
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+    box-shadow: 0 8px 16px rgba(0, 107, 90, 0.15);
+}
+
+.btn-primary.full-width {
+    width: 100%;
+    padding: 14px;
+    font-size: 0.95rem;
+}
+
+.btn-secondary {
+    background: var(--day-btn-bg);
+    color: var(--text-primary);
+    padding: 10px 18px;
+    border: 1.5px solid var(--day-btn-border);
+}
+
+.btn-secondary:hover {
+    background: rgba(0, 107, 90, 0.04);
+}
+
+.btn-text {
+    background: transparent;
+    color: var(--text-secondary);
+    padding: 10px 18px;
+}
+
+.btn-text:hover {
+    color: var(--text-primary);
+}
+
+.btn-icon {
+    background: var(--day-btn-bg);
+    color: var(--text-secondary);
+    padding: 8px;
+    border-radius: 12px;
+    border: 1px solid transparent;
+}
+
+.btn-icon:hover {
+    background: rgba(244, 63, 94, 0.08);
+    color: var(--danger-color);
+    border-color: rgba(244, 63, 94, 0.1);
+}
+
+/* Inline Edit Controls */
+.habit-edit-input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.inline-edit-input {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 12px 16px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline: none;
+    transition: var(--transition);
+}
+
+.inline-edit-input:focus {
+    border-color: var(--primary-color);
+    background: var(--glass-bg);
+    box-shadow: 0 0 0 3px rgba(0, 107, 90, 0.12);
+}
+
+.edit-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    border-radius: 12px;
+}
+
+.habit-actions {
+    display: flex;
+    align-items: center;
+}
+
+/* Inputs & Form */
+input[type="text"], textarea {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid transparent;
+    border-radius: 18px; /* generous input radius */
+    padding: 14px 18px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: var(--transition);
+    outline: none;
+    margin-bottom: 12px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+input[type="text"]:focus, textarea:focus {
+    border-color: var(--primary-color);
+    background: var(--glass-bg);
+    box-shadow: 0 0 0 3px rgba(0, 107, 90, 0.12);
+}
+
+.form-actions {
+    display: flex;
+    gap: 8px;
+}
+
+#new-habit-form {
+    margin-bottom: 20px;
+    animation: fadeIn 0.25s ease;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Habits List */
+.habits-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.habit-item {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-left: 5px solid var(--primary-color); /* Curated Mint thick left border */
+    border-radius: 24px; /* Large 24px shape curvature */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition);
+}
+
+.habit-item:hover {
+    border-color: var(--card-hover-border);
+    border-left-width: 5px;
+    transform: translateY(-2px);
+}
+
+.habit-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.habit-title-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.habit-name {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+
+.habit-streak {
+    background: rgba(249, 115, 22, 0.1);
+    color: #f97316;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 2px 10px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid rgba(249, 115, 22, 0.15);
+}
+
+/* Elegant 7-Day Weekly Grid */
+.habit-days-row {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    background: var(--days-row-bg);
+    padding: 12px;
+    border-radius: 18px; /* Spacious rounded layout */
+    transition: background-color 0.3s ease;
+}
+
+.habit-day-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.habit-day-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--day-btn-bg);
+    border: 1.5px solid var(--day-btn-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: var(--transition);
+    color: var(--text-secondary);
+}
+
+.habit-day-btn:hover {
+    background: rgba(0, 107, 90, 0.08);
+    border-color: rgba(0, 107, 90, 0.15);
+    color: var(--text-primary);
+}
+
+.habit-day-btn.completed {
+    background: var(--success-color) !important;
+    border-color: var(--success-color) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 12px rgba(0, 107, 90, 0.2);
+}
+
+.habit-day-btn.completed:hover {
+    background: #005f50 !important;
+    border-color: #005f50 !important;
+}
+
+.habit-day-btn.today {
+    border-color: var(--primary-color);
+}
+
+/* Journal Day Clicked State */
+.habit-day-btn.selected {
+    background: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 12px rgba(0, 107, 90, 0.2);
+}
+
+/* indicator for has-note */
+.habit-day-btn.has-note {
+    border-color: var(--primary-color);
+}
+
+.note-indicator-dot {
+    width: 4px;
+    height: 4px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    position: absolute;
+    bottom: 3px;
+}
+
+.habit-day-btn.selected .note-indicator-dot {
+    background-color: #fff;
+}
+
+.habit-day-btn .day-num {
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.habit-day-btn.completed .day-num {
+    display: none;
+}
+
+/* Beautiful green checkmark on complete */
+.habit-day-btn.completed::after {
+    content: "";
+    width: 6px;
+    height: 11px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    position: absolute;
+    top: 6px;
+}
+
+.day-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.habit-day-btn.today ~ .day-label {
+    color: var(--primary-color);
+}
+
+/* Journal Section customization */
+.journal-header-area {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.journal-days-row {
+    margin-bottom: 0;
+}
+
+/* Chart customization */
+.chart-container {
+    width: 100%;
+    height: 180px;
+    position: relative;
+    margin-top: 10px;
+}
+
+/* Success Feedback */
+.success-msg {
+    margin-top: 12px;
+    color: var(--success-color);
+    font-size: 0.85rem;
+    text-align: center;
+    animation: fadeIn 0.25s ease;
+}
+
+/* Scrollbar & Animations */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 107, 90, 0.1);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 107, 90, 0.2);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+    0% { transform: scale(0); }
+    100% { transform: scale(1); }
+}
+
+/* Ultra responsive grid scaling for smaller phones */
+@media (max-width: 480px) {
+    .container {
+        padding: 24px 16px;
+        gap: 20px;
+    }
+    .glass-panel {
+        padding: 20px;
+        border-radius: 20px;
+    }
+    .app-header {
+        padding: 16px 20px;
+    }
+    .logo-area {
+        gap: 12px;
+    }
+    .logo-text h1 {
+        font-size: 1.25rem;
+    }
+    .status-emoji {
+        font-size: 2rem;
+    }
+    .status-mood-card {
+        padding: 16px;
+        border-radius: 20px;
+    }
+    .habit-item {
+        padding: 16px;
+        border-radius: 20px;
+        gap: 12px;
+    }
+    .habit-days-row {
+        gap: 4px;
+        padding: 8px;
+        border-radius: 14px;
+    }
+    .habit-day-btn {
+        width: 28px;
+        height: 28px;
+    }
+    .habit-day-btn .day-num {
+        font-size: 0.7rem;
+    }
+    .habit-day-btn.completed::after {
+        width: 5px;
+        height: 9px;
+        top: 6px;
+    }
+    .day-label {
+        font-size: 0.6rem;
+    }
+}
+
+/* Screen View SPA Bouncy Transitions */
+.screen-view:not(.hidden) {
+    animation: fadeInScale 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Premium Koyu Tema Zorunlu Ezici Kuralları (Failsafe Dark Mode Overrides) */
+.dark body {
+    background-color: #121415 !important;
+    color: #f0f1f2 !important;
+}
+
+.dark .bg-white,
+.dark .soft-card,
+.dark .bg-surface-container-lowest {
+    background-color: #191c1d !important;
+    color: #f0f1f2 !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.dark header, 
+.dark nav {
+    background-color: rgba(25, 28, 29, 0.85) !important;
+    color: #f0f1f2 !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.dark .text-on-surface,
+.dark h2,
+.dark h3,
+.dark span:not(.text-primary):not(.text-secondary):not(.text-tertiary):not(.text-[#f59e0b]) {
+    color: #f0f1f2 !important;
+}
+
+.dark .text-on-surface-variant {
+    color: #a3adab !important;
+}
+
+.dark textarea,
+.dark select,
+.dark input[type="text"],
+.dark input[type="time"],
+.dark input[type="number"] {
+    background-color: rgba(0, 0, 0, 0.25) !important;
+    color: #f0f1f2 !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark .bg-surface-container-low,
+.dark .bg-surface-container,
+.dark .bg-surface-container-high {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+.dark .category-chip:not(.bg-primary-container):not(.bg-tertiary-container):not(.bg-secondary-container) {
+    background-color: #191c1d !important;
+    color: #a3adab !important;
+}
+
+.dark #journal-timeline-row,
+.dark #habits-timeline-row {
+    background-color: rgba(255, 255, 255, 0.04) !important;
+}
+
+/* Dynamic glow for active achievements */
+.badge-glow {
+    filter: drop-shadow(0 0 10px rgba(126, 217, 195, 0.6));
+}
+
+.bg-surface-container {
+    background-color: #e1e3e4;
+}
+
+.dark .bg-surface-container {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Toast Alerts Styles */
+.toast-alert {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translate(-50%, -100px);
+    z-index: 1000;
+    background: rgba(25, 28, 29, 0.95);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #f0f1f2;
+    padding: 12px 24px;
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.toast-alert.show {
+    transform: translate(-50%, 0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.dark .toast-alert {
+    background: rgba(255, 255, 255, 0.98);
+    color: #191c1d;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Hide horizontal scrollbars for timelines and sliders on mobile */
+#habits-timeline-row::-webkit-scrollbar,
+#journal-timeline-row::-webkit-scrollbar,
+#graphs-mood-days-row::-webkit-scrollbar,
+.overflow-x-auto::-webkit-scrollbar {
+    display: none !important;
+}
+
+#habits-timeline-row,
+#journal-timeline-row,
+#graphs-mood-days-row,
+.overflow-x-auto {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+}

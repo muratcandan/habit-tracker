@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Profile &amp; Settings</title>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#e1e3e4",
+                        "primary-container": "#7ed9c3",
+                        "tertiary-fixed-dim": "#d2bcfb",
+                        "secondary-fixed": "#ffdad5",
+                        "on-error-container": "#93000a",
+                        "on-secondary-container": "#75221b",
+                        "surface-dim": "#d9dadb",
+                        "secondary": "#9e4037",
+                        "surface-container": "#edeeef",
+                        "surface": "#f8f9fa",
+                        "on-secondary-fixed": "#410001",
+                        "surface-bright": "#f8f9fa",
+                        "tertiary": "#67558c",
+                        "inverse-primary": "#7cd7c1",
+                        "on-tertiary-fixed": "#220f44",
+                        "tertiary-fixed": "#ebddff",
+                        "on-primary-fixed-variant": "#005144",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f0f1f2",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#7cd7c1",
+                        "outline-variant": "#bdc9c4",
+                        "background": "#f8f9fa",
+                        "error-container": "#ffdad6",
+                        "surface-container-low": "#f3f4f5",
+                        "inverse-surface": "#2e3132",
+                        "outline": "#6e7a75",
+                        "error": "#ba1a1a",
+                        "tertiary-container": "#d4befd",
+                        "primary-fixed": "#98f4dd",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#3e4946",
+                        "on-secondary": "#ffffff",
+                        "on-surface": "#191c1d",
+                        "surface-container-high": "#e7e8e9",
+                        "on-secondary-fixed-variant": "#7f2922",
+                        "on-primary-fixed": "#00201a",
+                        "primary": "#006b5a",
+                        "secondary-container": "#fe8a7c",
+                        "on-tertiary-container": "#5c4a81",
+                        "secondary-fixed-dim": "#ffb4aa",
+                        "on-tertiary-fixed-variant": "#4f3d73",
+                        "surface-tint": "#006b5a",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-background": "#191c1d",
+                        "on-primary-container": "#005f50",
+                        "on-primary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "12px",
+                        "xs": "4px",
+                        "gutter": "16px",
+                        "md": "20px",
+                        "base": "8px",
+                        "lg": "32px",
+                        "xl": "48px",
+                        "container-padding": "24px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Quicksand"],
+                        "body-md": ["Quicksand"],
+                        "headline-md": ["Quicksand"],
+                        "label-md": ["Quicksand"],
+                        "headline-sm": ["Quicksand"],
+                        "headline-lg": ["Quicksand"],
+                        "headline-lg-mobile": ["Quicksand"],
+                        "label-sm": ["Quicksand"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.03em", "fontWeight": "700" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .soft-shadow {
+            shadow-color: rgba(45, 52, 54, 0.05);
+            box-shadow: 0 15px 20px -5px rgba(45, 52, 54, 0.05);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .badge-glow {
+            filter: drop-shadow(0 0 8px rgba(126, 217, 195, 0.4));
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-surface mb-24">
+<!-- TopAppBar -->
+<header class="w-full sticky top-0 bg-surface/80 dark:bg-on-surface/80 backdrop-blur-md z-50 flex items-center justify-between px-gutter py-sm w-full">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
+<img alt="Profile" class="w-full h-full object-cover" data-alt="A professional and friendly headshot of a young man with a warm smile, set against a soft-focus minimalist background. The lighting is bright and natural, reflecting a clean light-mode aesthetic. The image uses a soft color palette of teals and warm whites to match a sleek habit-tracking application UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPsshsJQ0n97G70vB8XP9Z9xshBfutg1IA5vTSmocQqWwVRu9DX8lPU0Y0W7tx78Ca5w8RxGWTM2i_88bA_EUrc9-xW6kcGw2aXJ55LtFXbu-B9-X4jn5-Wv3twc_GwTTqfSyIpWrGaLQd7BKHKGchFtJZPamFTC6Mfkr2glsdH-2AHVkGdedmxwxIcpL66btGWfxc2ksBGavCU_x57ahz21AHMvfVcbLueVSl_mGIxBaJnQz3pBQ9HwwykYnfS5XkfLKzKkbifTw"/>
+</div>
+<h1 class="font-headline-sm text-headline-sm text-primary">Good morning, Alex</h1>
+</div>
+<button class="hover:opacity-80 transition-opacity text-primary">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+</button>
+</header>
+<main class="max-w-md mx-auto px-6 pt-8 space-y-8">
+<!-- Profile Identity Hero Section -->
+<section class="text-center space-y-4">
+<div class="relative inline-block group">
+<div class="w-32 h-32 rounded-full p-1 bg-gradient-to-tr from-primary to-primary-container mx-auto">
+<div class="w-full h-full rounded-full overflow-hidden border-4 border-white">
+<img alt="User avatar" class="w-full h-full object-cover" data-alt="Close up portrait of a smiling person with high-key lighting, representing a personal growth and wellness app user. The environment is a modern, sunlit studio with a palette of soft mint and clean white. The visual style is crisp, professional, and optimistic, maintaining brand consistency with a minimalist digital interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-fbnSpbazQZBo5QMCQJRB4kB0MjtWXr4d__Yh1v1qHESLn66u_-qT5_bP0vrzozInIRzhJExIrlKYISw797zXjDmsgJ2Nit3XDFm1X4kEAPyzfNwloWwpkSaK3htj0X7Pm2uGMytJ6l9-1K81hllPXEs0nuuzUfsnhHUrvl-G04qNooH-w2_2ddlWKya6aEoMQTWUGEscyzzAbTtdjJjO107zcyVH1GyBkCAYf71B0PvtAFBDjOmSgnRdbD6n4YWUQR1yBwoTN1I"/>
+</div>
+</div>
+<button class="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full shadow-lg scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+</div>
+<div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Alex Johnson</h2>
+<p class="font-body-md text-on-surface-variant">Building a better me, one habit at a time.</p>
+</div>
+</section>
+<!-- Achievements Bento Grid -->
+<section class="space-y-4">
+<h3 class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant px-1">Recent Achievements</h3>
+<div class="grid grid-cols-2 gap-4">
+<!-- Badge 1 -->
+<div class="bg-surface-container-lowest p-5 rounded-3xl soft-shadow flex flex-col items-center text-center gap-2 border-l-4 border-primary group hover:-translate-y-1 transition-all duration-300">
+<div class="w-14 h-14 bg-primary-container rounded-full flex items-center justify-center text-on-primary-container mb-2 badge-glow">
+<span class="material-symbols-outlined text-3xl" data-icon="workspace_premium" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary">7-Day Warrior</span>
+<p class="text-[11px] text-on-surface-variant">Completed all habits for a full week</p>
+</div>
+<!-- Badge 2 -->
+<div class="bg-surface-container-lowest p-5 rounded-3xl soft-shadow flex flex-col items-center text-center gap-2 border-l-4 border-tertiary-container group hover:-translate-y-1 transition-all duration-300">
+<div class="w-14 h-14 bg-tertiary-container rounded-full flex items-center justify-center text-on-tertiary-container mb-2">
+<span class="material-symbols-outlined text-3xl" data-icon="local_fire_department" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+<span class="font-label-sm text-label-sm text-tertiary">Consistent</span>
+<p class="text-[11px] text-on-surface-variant">Active for 30 consecutive days</p>
+</div>
+</div>
+</section>
+<!-- Settings List -->
+<section class="space-y-3 pb-8">
+<h3 class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant px-1">Settings</h3>
+<div class="bg-surface-container-lowest rounded-3xl soft-shadow overflow-hidden">
+<!-- Notifications -->
+<button class="w-full flex items-center justify-between p-5 hover:bg-surface-container transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</div>
+<div class="text-left">
+<p class="font-body-md text-on-surface">Notifications</p>
+<p class="text-[12px] text-on-surface-variant">Manage habit reminders</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+<div class="h-[1px] bg-surface-container mx-5"></div>
+<!-- Appearance -->
+<button class="w-full flex items-center justify-between p-5 hover:bg-surface-container transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-2xl bg-tertiary/10 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" data-icon="palette">palette</span>
+</div>
+<div class="text-left">
+<p class="font-body-md text-on-surface">Appearance</p>
+<p class="text-[12px] text-on-surface-variant">Light, Dark, and Themes</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[12px] text-primary font-medium">Light</span>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+</button>
+<div class="h-[1px] bg-surface-container mx-5"></div>
+<!-- Export Data -->
+<button class="w-full flex items-center justify-between p-5 hover:bg-surface-container transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="database">database</span>
+</div>
+<div class="text-left">
+<p class="font-body-md text-on-surface">Export Data</p>
+<p class="text-[12px] text-on-surface-variant">Download your habit history</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+<div class="h-[1px] bg-surface-container mx-5"></div>
+<!-- Privacy -->
+<button class="w-full flex items-center justify-between p-5 hover:bg-surface-container transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-2xl bg-on-surface-variant/10 flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="lock">lock</span>
+</div>
+<div class="text-left">
+<p class="font-body-md text-on-surface">Privacy &amp; Security</p>
+<p class="text-[12px] text-on-surface-variant">Manage account access</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+</div>
+<!-- Logout Button -->
+<button class="w-full mt-4 p-5 rounded-3xl bg-secondary-container/20 text-secondary font-label-md flex items-center justify-center gap-2 hover:bg-secondary-container/30 transition-all scale-100 active:scale-95">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+                Logout
+            </button>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-surface/80 dark:bg-on-surface/80 backdrop-blur-md shadow-[0_-4px_20px_rgba(45,52,54,0.05)]">
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container rounded-full px-4 py-1 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-sm text-label-sm">Dashboard</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container rounded-full px-4 py-1 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-sm text-label-sm">Progress</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container rounded-full px-4 py-1 transition-all duration-200">
+<span class="material-symbols-outlined text-primary scale-125" data-icon="add_circle">add_circle</span>
+<span class="font-label-sm text-label-sm">Add</span>
+</button>
+<!-- ACTIVE TAB: Profile -->
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 scale-110 active:scale-95 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</button>
+</nav>
+<script>
+        // Simple micro-interaction for buttons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.classList.add('scale-95');
+                setTimeout(() => this.classList.remove('scale-95'), 100);
+            });
+        });
+
+        // Theme toggle simulation (purely visual for this demo)
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+        }
+    </script>
+</body></html>

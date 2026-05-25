@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html class="light" lang="tr">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+    <title>Zinciri Kırma - Habit Tracker</title>
+    <meta name="description" content="Luminous Vitality Alışkanlık Takibi ve Günlük.">
+    <meta name="theme-color" content="#f8f9fa">
+    <link rel="manifest" href="manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-variant": "#e1e3e4",
+                    "primary-container": "#7ed9c3",
+                    "tertiary-fixed-dim": "#d2bcfb",
+                    "secondary-fixed": "#ffdad5",
+                    "on-error-container": "#93000a",
+                    "on-secondary-container": "#75221b",
+                    "surface-dim": "#d9dadb",
+                    "secondary": "#9e4037",
+                    "surface-container": "#edeeef",
+                    "surface": "#f8f9fa",
+                    "on-secondary-fixed": "#410001",
+                    "surface-bright": "#f8f9fa",
+                    "tertiary": "#67558c",
+                    "inverse-primary": "#7cd7c1",
+                    "on-tertiary-fixed": "#220f44",
+                    "tertiary-fixed": "#ebddff",
+                    "on-primary-fixed-variant": "#005144",
+                    "on-error": "#ffffff",
+                    "inverse-on-surface": "#f0f1f2",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed-dim": "#7cd7c1",
+                    "outline-variant": "#bdc9c4",
+                    "background": "#f8f9fa",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#f3f4f5",
+                    "inverse-surface": "#2e3132",
+                    "outline": "#6e7a75",
+                    "error": "#ba1a1a",
+                    "tertiary-container": "#d4befd",
+                    "primary-fixed": "#98f4dd",
+                    "on-tertiary": "#ffffff",
+                    "on-surface-variant": "#3e4946",
+                    "on-secondary": "#ffffff",
+                    "on-surface": "#191c1d",
+                    "surface-container-high": "#e7e8e9",
+                    "on-secondary-fixed-variant": "#7f2922",
+                    "on-primary-fixed": "#00201a",
+                    "primary": "#006b5a",
+                    "secondary-container": "#fe8a7c",
+                    "on-tertiary-container": "#5c4a81",
+                    "secondary-fixed-dim": "#ffb4aa",
+                    "on-tertiary-fixed-variant": "#4f3d73",
+                    "surface-tint": "#006b5a",
+                    "surface-container-highest": "#e1e3e4",
+                    "on-background": "#191c1d",
+                    "on-primary-container": "#005f50",
+                    "on-primary": "#ffffff",
+                    "sunny-yellow": "#FFD966",
+                    "lavender-soft": "#D2BCFB"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "12px",
+                    "xs": "4px",
+                    "gutter": "16px",
+                    "md": "20px",
+                    "base": "8px",
+                    "lg": "32px",
+                    "xl": "48px",
+                    "container-padding": "24px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Quicksand"],
+                    "body-md": ["Quicksand"],
+                    "headline-md": ["Quicksand"],
+                    "label-md": ["Quicksand"],
+                    "headline-sm": ["Quicksand"],
+                    "headline-lg": ["Quicksand"],
+                    "headline-lg-mobile": ["Quicksand"],
+                    "label-sm": ["Quicksand"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.03em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+        body { font-family: 'Quicksand', sans-serif; background-color: #f8f9fa; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-habit-ring {
+            outline: 2px solid #7ed9c3;
+            outline-offset: 2px;
+        }
+        .badge-glow {
+            filter: drop-shadow(0 0 8px rgba(126, 217, 195, 0.4));
+        }
+        .chart-wave {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: dash 2s ease-in-out forwards;
+        }
+        @keyframes dash {
+            to { stroke-dashoffset: 0; }
+        }
+        .soft-card {
+            background: white;
+            border-radius: 1.5rem;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .soft-card:active {
+            transform: scale(0.97);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen pb-32">
+    <!-- Top Mesh Glow Background -->
+    <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-primary-container/20 to-secondary-container/10 blur-[80px] rounded-full -z-10 pointer-events-none"></div>
+
+    <!-- HEADER (Dashboard and Progress Shared) -->
+    <header class="w-full bg-surface/80 dark:bg-on-surface/80 backdrop-blur-md z-50 flex items-center justify-between px-container-padding py-sm border-b border-surface-container-high/40">
+        <div class="flex items-center gap-sm">
+            <div id="header-avatar-box" class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container bg-surface-container flex items-center justify-center text-on-surface-variant">
+                <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">person</span>
+            </div>
+            <div>
+                <h1 id="header-welcome-title" class="font-headline-sm text-headline-sm text-primary">Günaydın, Kullanıcı Adı</h1>
+                <p id="header-date-subtitle" class="font-label-sm text-label-sm text-on-surface-variant"></p>
+            </div>
+        </div>
+    </header>
+
+    <!-- SCREEN 1: DASHBOARD -->
+    <section id="screen-dashboard" class="screen-view px-container-padding py-md max-w-4xl mx-auto space-y-lg">
+        <!-- Today's Progress Card -->
+        <div class="soft-card p-md shadow-[0_15px_20px_rgba(45,52,54,0.04)] border-l-4 border-primary">
+            <div class="flex justify-between items-end">
+                <div>
+                    <h2 class="font-headline-sm text-headline-sm">Bugünkü Durum</h2>
+                    <p id="progress-summary-desc" class="font-body-md text-body-md text-on-surface-variant">5 alışkanlıktan 0 tanesini tamamladın!</p>
+                </div>
+                <div class="relative w-16 h-16 flex items-center justify-center">
+                    <svg class="w-full h-full transform -rotate-90">
+                        <circle class="text-surface-container" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="6"></circle>
+                        <circle id="progress-circle-ring" class="text-primary transition-all duration-700" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="176" stroke-dashoffset="176" stroke-width="6"></circle>
+                    </svg>
+                    <span id="progress-circle-percent" class="absolute font-label-md text-label-md text-primary font-bold">0%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Daily Habits Section -->
+        <section class="space-y-sm">
+            <div class="flex justify-between items-center px-1">
+                <div class="flex items-center gap-xs">
+                    <h3 class="font-headline-sm text-headline-sm flex items-center gap-1.5">
+                        <span>Günlük Alışkanlıklar</span>
+                        <span id="habits-selected-date-label" onclick="goToTodayHabits()" class="text-[12px] font-bold text-primary bg-primary-container/20 px-2.5 py-0.5 rounded-full cursor-pointer hover:bg-primary/30 hover:scale-105 active:scale-95 transition-all select-none" title="Bugüne Git">Bugün</span>
+                    </h3>
+                    <div class="relative w-8 h-8 flex items-center justify-center">
+                        <button class="material-symbols-outlined text-[20px] text-primary hover:bg-primary/10 p-1.5 rounded-full transition-colors active:scale-90" title="Tarih Seç">calendar_month</button>
+                        <input type="date" id="habits-date-picker" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" onchange="onHabitsDatePickerChange(this.value)" />
+                    </div>
+                </div>
+                <span id="category-badge" class="font-label-sm text-label-sm text-primary bg-primary-container/20 px-3 py-1 rounded-full">Tümü</span>
+            </div>
+            
+            <!-- Habits Calendar Slider -->
+            <div id="habits-timeline-row" class="flex gap-2 bg-surface-container/60 p-1.5 rounded-full overflow-x-auto my-xs">
+                <!-- Dynamic Date Tabs filled by JS -->
+            </div>
+            
+            <!-- Dynamic Habits List -->
+            <div id="dashboard-habits-list" class="space-y-sm">
+                <!-- Filled dynamically by JS -->
+            </div>
+        </section>
+
+        <!-- Daily Note (Reflection) Section -->
+        <section class="space-y-sm">
+            <div class="flex justify-between items-center mb-sm px-1">
+                <div class="flex items-center gap-xs shrink-0">
+                    <h3 class="font-headline-sm text-headline-sm flex items-center gap-1.5">
+                        <span>Günlük Not</span>
+                        <span id="journal-selected-date-label" onclick="goToTodayJournal()" class="text-[12px] font-bold text-secondary bg-secondary-container/20 px-2.5 py-0.5 rounded-full cursor-pointer hover:bg-secondary/30 hover:scale-105 active:scale-95 transition-all select-none" title="Bugüne Git">Bugün</span>
+                    </h3>
+                    <div class="relative w-8 h-8 flex items-center justify-center">
+                        <button class="material-symbols-outlined text-[20px] text-secondary hover:bg-secondary/10 p-1.5 rounded-full transition-colors active:scale-90" title="Tarih Seç">calendar_month</button>
+                        <input type="date" id="journal-date-picker" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" onchange="onJournalDatePickerChange(this.value)" />
+                    </div>
+                </div>
+            </div>
+            <!-- Reflection Date Toggles -->
+            <div id="journal-timeline-row" class="flex gap-2 bg-surface-container/60 p-1.5 rounded-full overflow-x-auto my-xs">
+                <!-- Dynamic Date Tabs filled by JS -->
+            </div>
+            <div class="bg-white rounded-3xl p-md shadow-[0_15px_20px_rgba(45,52,54,0.04)] space-y-sm">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center gap-xs text-secondary">
+                        <span class="material-symbols-outlined text-[20px]" data-icon="edit_note">edit_note</span>
+                        <span id="journal-selected-title" class="font-label-md text-label-md">Bugünkü Düşüncelerim</span>
+                    </div>
+                    <!-- Mood Tracker Row -->
+                    <div class="flex items-center gap-1.5" id="dashboard-mood-picker">
+                        <button onclick="selectDailyMood(1)" id="mood-btn-1" class="text-lg p-1 rounded-xl hover:bg-surface-container transition-all active:scale-90" title="Çok Mutsuz">😢</button>
+                        <button onclick="selectDailyMood(2)" id="mood-btn-2" class="text-lg p-1 rounded-xl hover:bg-surface-container transition-all active:scale-90" title="Mutsuz">🙁</button>
+                        <button onclick="selectDailyMood(3)" id="mood-btn-3" class="text-lg p-1 rounded-xl hover:bg-surface-container transition-all active:scale-90" title="Nötr">😐</button>
+                        <button onclick="selectDailyMood(4)" id="mood-btn-4" class="text-lg p-1 rounded-xl hover:bg-surface-container transition-all active:scale-90" title="Mutlu">🙂</button>
+                        <button onclick="selectDailyMood(5)" id="mood-btn-5" class="text-lg p-1 rounded-xl hover:bg-surface-container transition-all active:scale-90" title="Çok Mutlu">😄</button>
+                    </div>
+                </div>
+                <textarea id="dashboard-journal-input" class="w-full min-h-[120px] bg-surface/50 border-none focus:ring-2 focus:ring-primary-container rounded-2xl p-sm font-body-md text-body-md placeholder:text-on-surface-variant/40 resize-none transition-all duration-300 outline-none" placeholder="Bugün nasıl hissediyorsun? Küçük başarıların veya kaydetmek istediğin notlar var mı?"></textarea>
+                <div class="flex justify-end gap-2">
+                    <button id="btn-save-reflection" class="bg-primary text-white px-gutter py-2.5 rounded-full font-label-md hover:opacity-90 transition-all active:scale-95">Notu Kaydet</button>
+                </div>
+                <div id="journal-save-msg" class="text-xs text-success-color text-center font-semibold hidden">Notunuz başarıyla kaydedildi!</div>
+            </div>
+        </section>
+
+        <!-- Visual Inspo / Empty State Prompt -->
+        <section class="relative overflow-hidden rounded-3xl h-40 flex items-center px-lg shadow-[0_15px_20px_rgba(45,52,54,0.04)] cursor-pointer" onclick="cycleQuote()">
+            <div class="absolute inset-0 z-0">
+                <img alt="Doğa Görseli" class="w-full h-full object-cover opacity-30" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmdq7oOymRIs8x_bBBCJ7eGQTtW9v6JApga_hSmdwEUdm8a3QQ9yYWAPz-sJYHIuGnqp8UTO5TlVTiBPmHOvLHmb5duTFWanbYLqj4WHG-R5nNOTVsRSWAOaLcDp3nFWROyCmDyyO3aFsnrA9X7fyEahQ138HRSVe-dNckm4KV2DIiukw5ZNPhF3vfj_bm1GlN8D2wzfiQuy7egyIpuv21JjmrNfOThIS2wkwYoh8noS2SQC07ybdRhgKIEktVUM937SUxlvj91rQ"/>
+                <div class="absolute inset-0 bg-gradient-to-r from-background to-transparent"></div>
+            </div>
+            <div class="relative z-10 max-w-[240px]">
+                <h4 id="inspo-title" class="font-headline-sm text-headline-sm text-primary mb-1">İstikrar Anahtardır.</h4>
+                <p id="inspo-quote" class="font-label-sm text-label-sm text-on-surface-variant">Büyük hedeflere atılan her küçük adım değerlidir.</p>
+            </div>
+        </section>
+    </section>
+
+    <!-- SCREEN 2: PROGRESS -->
+    <section id="screen-progress" class="screen-view hidden px-container-padding py-md max-w-4xl mx-auto space-y-lg">
+        <!-- Summary Stats Bento Grid -->
+        <section class="grid grid-cols-2 gap-md">
+            <!-- Current Streak Card -->
+            <div class="soft-card p-md shadow-[0_15px_20px_rgba(45,52,54,0.04)] border-l-4 border-sunny-yellow flex flex-col justify-between">
+                <div>
+                    <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Mevcut Zincir</span>
+                    <h2 id="progress-streak-val" class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mt-xs">0 Gün</h2>
+                </div>
+                <div class="flex items-center gap-xs mt-sm text-primary">
+                    <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+                    <span class="font-label-md text-label-md">Harika gidiyorsun!</span>
+                </div>
+            </div>
+            <!-- Total Completed Card -->
+            <div class="soft-card p-md shadow-[0_15px_20px_rgba(45,52,54,0.04)] border-l-4 border-tertiary-container flex flex-col justify-between">
+                <div>
+                    <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Toplam Başarı</span>
+                    <h2 id="progress-total-val" class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mt-xs">0 Kere</h2>
+                </div>
+                <div class="flex items-center gap-xs mt-sm text-tertiary">
+                    <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+                    <span id="progress-weekly-completions-tag" class="font-label-md text-label-md">Bu hafta 0 tamamlandı</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Weekly Wave Chart (Activity Trend) -->
+        <section class="soft-card p-4 sm:p-lg shadow-[0_15px_20px_rgba(45,52,54,0.04)]">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-sm mb-lg">
+                <div>
+                    <div class="flex items-center gap-xs flex-wrap">
+                        <h3 class="font-headline-sm text-headline-sm">Aktivite Grafiği</h3>
+                        <div class="flex items-center gap-1 ml-xs bg-primary-container/10 px-1 py-0.5 rounded-full">
+                            <button class="material-symbols-outlined text-[18px] text-primary hover:bg-primary/10 p-0.5 rounded-full active:scale-90 transition-all select-none leading-none flex items-center justify-center" onclick="navigateActivityDate(-1)" type="button">chevron_left</button>
+                            <span class="text-[11px] font-bold text-primary px-1 select-none" id="activity-chart-date-label">Bugün</span>
+                            <button class="material-symbols-outlined text-[18px] text-primary hover:bg-primary/10 p-0.5 rounded-full active:scale-90 transition-all select-none leading-none flex items-center justify-center" onclick="navigateActivityDate(1)" type="button">chevron_right</button>
+                        </div>
+                    </div>
+                    <p id="chart-status-desc" class="font-body-md text-body-md text-on-surface-variant">Bu hafta tamamlanma oranın dengeli.</p>
+                </div>
+                <div class="flex bg-surface-container-high rounded-full p-1 w-48 sm:w-52 shrink-0 self-start sm:self-auto">
+                    <button class="flex-1 py-1 text-[10px] font-label-md rounded-full transition-all duration-300 bg-primary text-white font-semibold" id="btn-act-weekly" onclick="switchActivityRange('weekly')" type="button">Haftalık</button>
+                    <button class="flex-1 py-1 text-[10px] font-label-md rounded-full transition-all duration-300 text-on-surface-variant font-semibold" id="btn-act-monthly" onclick="switchActivityRange('monthly')" type="button">Aylık</button>
+                    <button class="flex-1 py-1 text-[10px] font-label-md rounded-full transition-all duration-300 text-on-surface-variant font-semibold" id="btn-act-yearly" onclick="switchActivityRange('yearly')" type="button">Yıllık</button>
+                </div>
+            </div>
+            <!-- Dynamic SVG Wave Spline -->
+            <div class="h-48 w-full relative">
+                <svg id="weekly-wave-svg" class="w-full h-full preserve-3d" viewBox="0 0 400 100">
+                    <defs>
+                        <linearGradient id="wave-grad" x1="0%" x2="0%" y1="0%" y2="100%">
+                            <stop id="wave-grad-stop-1" offset="0%" style="stop-color:#006b5a;stop-opacity:1"></stop>
+                            <stop id="wave-grad-stop-2" offset="100%" style="stop-color:#006b5a;stop-opacity:0"></stop>
+                        </linearGradient>
+                    </defs>
+                    <path id="weekly-wave-stroke" class="chart-wave" d="M0,80 Q50,80 100,80 T200,80 T300,80 T400,80" fill="none" stroke="#006b5a" stroke-linecap="round" stroke-width="4"></path>
+                    <path id="weekly-wave-fill" d="M0,80 Q50,80 100,80 T200,80 T300,80 T400,80 V100 H0 Z" fill="url(#wave-grad)" opacity="0.08"></path>
+                </svg>
+                <div id="wave-labels-row" class="flex justify-between mt-sm text-on-surface-variant font-label-sm">
+                    <!-- Day Labels filled dynamically by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Weekly Mood Trend Spline Chart -->
+        <section class="soft-card p-4 sm:p-lg shadow-[0_15px_20px_rgba(45,52,54,0.04)]">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-sm mb-lg">
+                <div>
+                    <div class="flex items-center gap-xs flex-wrap">
+                        <h3 class="font-headline-sm text-headline-sm">Ruh Hali Çizelgesi</h3>
+                        <div class="flex items-center gap-1 ml-xs bg-primary-container/10 px-1 py-0.5 rounded-full">
+                            <button class="material-symbols-outlined text-[18px] text-primary hover:bg-primary/10 p-0.5 rounded-full active:scale-90 transition-all select-none leading-none flex items-center justify-center" onclick="navigateMoodDate(-1)" type="button">chevron_left</button>
+                            <span class="text-[11px] font-bold text-primary px-1 select-none" id="mood-chart-date-label">Bugün</span>
+                            <button class="material-symbols-outlined text-[18px] text-primary hover:bg-primary/10 p-0.5 rounded-full active:scale-90 transition-all select-none leading-none flex items-center justify-center" onclick="navigateMoodDate(1)" type="button">chevron_right</button>
+                        </div>
+                    </div>
+                    <p id="mood-chart-status-desc" class="font-body-md text-body-md text-on-surface-variant">Son 7 günlük duygu durum analiziniz.</p>
+                </div>
+                <div class="flex bg-surface-container-high rounded-full p-1 w-48 sm:w-52 shrink-0 self-start sm:self-auto">
+                    <button class="flex-1 py-1 text-[10px] font-label-md rounded-full transition-all duration-300 bg-primary text-white font-semibold" id="btn-mood-weekly" onclick="switchMoodRange('weekly')" type="button">Haftalık</button>
+                    <button class="flex-1 py-1 text-[10px] font-label-md rounded-full transition-all duration-300 text-on-surface-variant font-semibold" id="btn-mood-monthly" onclick="switchMoodRange('monthly')" type="button">Aylık</button>
+                    <button class="flex-1 py-1 text-[10px] font-label-md rounded-full transition-all duration-300 text-on-surface-variant font-semibold" id="btn-mood-yearly" onclick="switchMoodRange('yearly')" type="button">Yıllık</button>
+                </div>
+            </div>
+            
+            <div class="flex gap-2">
+                <!-- Left Mood Scale Sidebar -->
+                <div class="flex flex-col justify-between text-xs py-2 select-none h-44 border-r border-surface-container-high/40 pr-2">
+                    <span title="Çok Mutlu">😄</span>
+                    <span title="Mutlu">🙂</span>
+                    <span title="Nötr">😐</span>
+                    <span title="Mutsuz">🙁</span>
+                    <span title="Çok Mutsuz">😢</span>
+                </div>
+                
+                <!-- SVG spline plot area -->
+                <div class="h-44 flex-1 relative">
+                    <svg id="mood-wave-svg" class="w-full h-full preserve-3d" viewBox="0 0 400 100">
+                        <defs>
+                            <linearGradient id="mood-line-grad" x1="0" y1="90" x2="0" y2="10" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" style="stop-color:#ba1a1a;stop-opacity:1"></stop>
+                                <stop offset="50%" style="stop-color:#f59e0b;stop-opacity:1"></stop>
+                                <stop offset="100%" style="stop-color:#006b5a;stop-opacity:1"></stop>
+                            </linearGradient>
+                        </defs>
+                        <path id="mood-wave-stroke" class="chart-wave" d="M0,80 Q50,80 100,80 T200,80 T300,80 T400,80" fill="none" stroke="url(#mood-line-grad)" stroke-linecap="round" stroke-width="4"></path>
+                    </svg>
+                    <div id="mood-labels-row" class="flex justify-between mt-sm text-on-surface-variant font-label-sm">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Edit Mood Selector Area -->
+            <div id="graphs-mood-edit-container" class="mt-4 pt-4 border-t border-surface-container/60 dark:border-white/10 space-y-sm">
+                <span class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider block px-1">GÜNLÜK RUH HALİNİ GÜNCELLE (SON 7 GÜN)</span>
+                <div id="graphs-mood-days-row" class="grid grid-cols-7 gap-1 py-1.5 bg-surface-container/20 rounded-2xl p-1 w-full">
+                    <!-- Dynamic Days with Emojis populated by JS -->
+                </div>
+                <!-- Dynamic Inline Emoji Picker (hidden by default) -->
+                <div id="graphs-mood-picker-panel" class="hidden bg-surface-container-low p-3.5 rounded-2xl border border-surface-container-high space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span id="graphs-mood-picker-title" class="text-xs font-bold text-primary">Tarih Seçin</span>
+                        <button onclick="closeGraphsMoodPicker()" class="text-on-surface-variant/40 hover:text-on-surface flex items-center justify-center p-0.5 rounded-full hover:bg-surface-container"><span class="material-symbols-outlined text-[16px]">close</span></button>
+                    </div>
+                    <div class="flex justify-around py-2">
+                        <button onclick="setGraphsMood(1)" class="text-2xl hover:scale-125 transition-transform p-2 rounded-xl hover:bg-white dark:hover:bg-white/10 active:scale-95" title="Çok Mutsuz">😢</button>
+                        <button onclick="setGraphsMood(2)" class="text-2xl hover:scale-125 transition-transform p-2 rounded-xl hover:bg-white dark:hover:bg-white/10 active:scale-95" title="Mutsuz">🙁</button>
+                        <button onclick="setGraphsMood(3)" class="text-2xl hover:scale-125 transition-transform p-2 rounded-xl hover:bg-white dark:hover:bg-white/10 active:scale-95" title="Nötr">😐</button>
+                        <button onclick="setGraphsMood(4)" class="text-2xl hover:scale-125 transition-transform p-2 rounded-xl hover:bg-white dark:hover:bg-white/10 active:scale-95" title="Mutlu">🙂</button>
+                        <button onclick="setGraphsMood(5)" class="text-2xl hover:scale-125 transition-transform p-2 rounded-xl hover:bg-white dark:hover:bg-white/10 active:scale-95" title="Çok Mutlu">😄</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Habit Breakdown List with Weekly/Monthly/Yearly Circle Indicators -->
+        <section class="space-y-md">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-sm mb-sm px-1">
+                <div class="flex items-center gap-xs flex-wrap">
+                    <h3 id="perf-chart-title" class="font-headline-sm text-headline-sm">Haftalık Performans Çizelgesi</h3>
+                    <div class="flex items-center gap-1 ml-xs bg-primary-container/10 px-1 py-0.5 rounded-full">
+                        <button class="material-symbols-outlined text-[18px] text-primary hover:bg-primary/10 p-0.5 rounded-full active:scale-90 transition-all select-none leading-none flex items-center justify-center" onclick="navigatePerformanceDate(-1)" type="button">chevron_left</button>
+                        <span class="text-[11px] font-bold text-primary px-1 select-none" id="perf-chart-date-label">Bugün</span>
+                        <button class="material-symbols-outlined text-[18px] text-primary hover:bg-primary/10 p-0.5 rounded-full active:scale-90 transition-all select-none leading-none flex items-center justify-center" onclick="navigatePerformanceDate(1)" type="button">chevron_right</button>
+                    </div>
+                </div>
+                <div class="flex bg-surface-container-high rounded-full p-1 w-48 sm:w-52 shrink-0 self-start sm:self-auto">
+                    <button class="flex-1 py-1 text-[10px] font-label-md rounded-full transition-all duration-300 bg-primary text-white font-semibold" id="btn-perf-weekly" onclick="switchPerformanceRange('weekly')" type="button">Haftalık</button>
+                    <button class="flex-1 py-1 text-[10px] font-label-md rounded-full transition-all duration-300 text-on-surface-variant font-semibold" id="btn-perf-monthly" onclick="switchPerformanceRange('monthly')" type="button">Aylık</button>
+                    <button class="flex-1 py-1 text-[10px] font-label-md rounded-full transition-all duration-300 text-on-surface-variant font-semibold" id="btn-perf-yearly" onclick="switchPerformanceRange('yearly')" type="button">Yıllık</button>
+                </div>
+            </div>
+            <div id="progress-habits-breakdown-list" class="space-y-sm">
+                <!-- Filled dynamically by JS -->
+            </div>
+        </section>
+
+        <!-- Dynamic Insights Panel -->
+        <section class="bg-primary/5 rounded-3xl p-4 sm:p-lg flex flex-col md:flex-row items-center gap-sm sm:gap-lg border border-primary/10 cursor-pointer hover:bg-primary/10 transition-all duration-300" onclick="cycleAdvice()">
+            <div class="flex-1 space-y-sm">
+                <h3 id="insight-box-title" class="font-headline-sm text-headline-sm text-primary">Veri Analitiği</h3>
+                <p id="insight-box-desc" class="font-body-md text-body-md text-on-surface-variant">Uygulamayı kullanmaya başladıkça en başarılı olduğun günleri analiz edip sana özel tavsiyeler üreteceğiz!</p>
+            </div>
+            <div class="w-32 h-32 flex-shrink-0">
+                <img alt="İçgörü Görseli" class="w-full h-full object-cover rounded-full shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmYl9EMXt5qk8ShFWoGfehaZNkTIv79JkpDXdlTucq4NqwwiEW9qFR_EWrNq_8HPipTc9AGP5pBQgURDileIEopLdpCHEn7SBSjd71YJRZO_jXn5-FmD9Ph8ynBy9TqOxLvENuQeraq_E5Wv2GPygKJnH8gW2SwYr7S3cOEFvoit9AKR-99FM_AK6RGQvxgD2KTVU41JFnorIROQWv0ibpZNIRtQIAfG_5ZrxDI0xcN4f_zrU-gytALImGZFGVH5gYsuB186aNnes"/>
+            </div>
+        </section>
+    </section>
+
+    <!-- SCREEN 3: ADD HABIT -->
+    <section id="screen-add-habit" class="screen-view hidden px-container-padding py-md max-w-2xl mx-auto space-y-lg">
+        <!-- Add Form -->
+        <form id="add-habit-form" class="flex flex-col gap-md" onsubmit="event.preventDefault()">
+            <!-- Habit Name Input -->
+            <div class="flex flex-col gap-xs">
+                <label class="font-label-md text-label-md text-on-surface-variant px-1">Alışkanlık İsmi</label>
+                <input id="add-habit-name-input" class="w-full bg-surface-container-lowest border-none rounded-2xl py-4 px-md font-body-md text-body-md text-on-surface shadow-[0_15px_30px_-5px_rgba(45,52,54,0.05)] transition-all duration-200 outline-none focus:ring-2 focus:ring-primary-container" placeholder="Örn: 2L Su İç" type="text" autocomplete="off" />
+            </div>
+
+            <!-- Category Selection -->
+            <div class="flex flex-col gap-xs">
+                <label class="font-label-md text-label-md text-on-surface-variant px-1">Kategori Seçimi</label>
+                <div class="grid grid-cols-3 gap-2 sm:grid-cols-4">
+                    <button class="category-chip flex items-center gap-xs bg-primary-container text-on-primary-container p-3 rounded-xl shadow-[0_10px_20px_-5px_rgba(45,52,54,0.03)] border-l-4 border-primary" onclick="selectCategoryChip(this, 'Health')" type="button">
+                        <span class="material-symbols-outlined text-[18px] text-primary">favorite</span>
+                        <span class="text-xs font-semibold">Sağlık</span>
+                    </button>
+                    <button class="category-chip flex items-center gap-xs bg-surface-container-lowest p-3 rounded-xl shadow-[0_10px_20px_-5px_rgba(45,52,54,0.03)] border-l-4 border-tertiary" onclick="selectCategoryChip(this, 'Mind')" type="button">
+                        <span class="material-symbols-outlined text-[18px] text-tertiary">psychology</span>
+                        <span class="text-xs font-semibold">Zihin</span>
+                    </button>
+                    <button class="category-chip flex items-center gap-xs bg-surface-container-lowest p-3 rounded-xl shadow-[0_10px_20px_-5px_rgba(45,52,54,0.03)] border-l-4 border-secondary-container" onclick="selectCategoryChip(this, 'Productivity')" type="button">
+                        <span class="material-symbols-outlined text-[18px] text-secondary-container">bolt</span>
+                        <span class="text-xs font-semibold">Üretkenlik</span>
+                    </button>
+                    <button class="category-chip flex items-center gap-xs bg-surface-container-lowest p-3 rounded-xl shadow-[0_10px_20px_-5px_rgba(45,52,54,0.03)] border-l-4 border-[#67558c]" onclick="selectCategoryChip(this, 'Book')" type="button">
+                        <span class="material-symbols-outlined text-[18px] text-[#67558c]">book</span>
+                        <span class="text-xs font-semibold">Kitap</span>
+                    </button>
+                    <button class="category-chip flex items-center gap-xs bg-surface-container-lowest p-3 rounded-xl shadow-[0_10px_20px_-5px_rgba(45,52,54,0.03)] border-l-4 border-[#bdc9c4]" onclick="selectCategoryChip(this, 'Software')" type="button">
+                        <span class="material-symbols-outlined text-[18px] text-[#bdc9c4]">code</span>
+                        <span class="text-xs font-semibold">Yazılım</span>
+                    </button>
+                    <button class="category-chip flex items-center gap-xs bg-surface-container-lowest p-3 rounded-xl shadow-[0_10px_20px_-5px_rgba(45,52,54,0.03)] border-l-4 border-[#9e4037]" onclick="selectCategoryChip(this, 'Sport')" type="button">
+                        <span class="material-symbols-outlined text-[18px] text-[#9e4037]">fitness_center</span>
+                        <span class="text-xs font-semibold">Spor</span>
+                    </button>
+                    <button class="category-chip flex items-center gap-xs bg-surface-container-lowest p-3 rounded-xl shadow-[0_10px_20px_-5px_rgba(45,52,54,0.03)] border-l-4 border-[#7ed9c3]" onclick="selectCategoryChip(this, 'Sleep')" type="button">
+                        <span class="material-symbols-outlined text-[18px] text-[#7ed9c3]">bedtimes</span>
+                        <span class="text-xs font-semibold">Uyku</span>
+                    </button>
+                    <button class="category-chip flex items-center gap-xs bg-surface-container-lowest p-3 rounded-xl shadow-[0_10px_20px_-5px_rgba(45,52,54,0.03)] border-l-4 border-[#fe8a7c]" onclick="selectCategoryChip(this, 'Social')" type="button">
+                        <span class="material-symbols-outlined text-[18px] text-[#fe8a7c]">group</span>
+                        <span class="text-xs font-semibold">Sosyal</span>
+                    </button>
+                    <button class="category-chip flex items-center gap-xs bg-surface-container-lowest p-3 rounded-xl shadow-[0_10px_20px_-5px_rgba(45,52,54,0.03)] border-l-4 border-outline" onclick="selectCategoryChip(this, 'Other')" type="button">
+                        <span class="material-symbols-outlined text-[18px] text-outline">more_horiz</span>
+                        <span class="text-xs font-semibold">Diğer</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Custom Category & Emoji Inputs (Dynamic) -->
+            <div id="custom-category-group" class="hidden flex flex-col gap-sm p-4 bg-surface-container-low rounded-2xl border border-surface-container-high shadow-sm">
+                <div class="flex flex-col gap-xs">
+                    <label class="font-label-sm text-label-sm text-on-surface-variant px-1">Özel Kategori Adı</label>
+                    <input id="add-habit-custom-category" class="w-full bg-white border-none rounded-xl py-2.5 px-md font-body-md text-body-md text-on-surface focus:ring-2 focus:ring-primary-container outline-none" placeholder="Örn: Kitap Okuma, Hobi" type="text" autocomplete="off" />
+                </div>
+                <div class="flex flex-col gap-xs">
+                    <label class="font-label-sm text-label-sm text-on-surface-variant px-1">Kategori Emojisi</label>
+                    <input id="add-habit-custom-emoji" class="w-full bg-white border-none rounded-xl py-2.5 px-md font-body-md text-body-md text-on-surface focus:ring-2 focus:ring-primary-container outline-none" placeholder="Örn: 📚, 🎸, 🏃‍♂️" type="text" autocomplete="off" />
+                </div>
+            </div>
+
+            <!-- Frequency Selection -->
+            <div class="flex flex-col gap-xs">
+                <label class="font-label-md text-label-md text-on-surface-variant px-1">Hedef Sıklığı</label>
+                <div class="flex bg-surface-container-high rounded-2xl p-1.5 w-full">
+                    <button class="flex-1 py-2 font-label-md text-label-md rounded-xl transition-all duration-300 bg-primary-container text-on-primary-container font-semibold" id="freqDaily" onclick="setAddHabitFrequency('daily')" type="button">Her Gün</button>
+                    <button class="flex-1 py-2 font-label-md text-label-md rounded-xl transition-all duration-300 text-on-surface-variant font-semibold" id="freqWeekly" onclick="setAddHabitFrequency('weekly')" type="button">Haftalık</button>
+                    <button class="flex-1 py-2 font-label-md text-label-md rounded-xl transition-all duration-300 text-on-surface-variant font-semibold" id="freqMonthly" onclick="setAddHabitFrequency('monthly')" type="button">Aylık</button>
+                </div>
+                
+                <!-- Custom Goal Slider/Input (Dynamic) -->
+                <div id="custom-frequency-count-group" class="hidden flex items-center justify-between p-4 bg-surface-container-low rounded-2xl border border-surface-container-high shadow-sm my-xs">
+                    <span id="custom-freq-label" class="font-label-sm text-label-sm text-on-surface-variant font-semibold">Hedeflenen gün sayısı:</span>
+                    <div class="flex items-center gap-xs">
+                        <button class="w-8 h-8 rounded-full bg-white flex items-center justify-center border border-surface-container-highest font-bold hover:bg-surface-container active:scale-90 transition-all" onclick="adjustCustomFreq(-1)" type="button">-</button>
+                        <span id="custom-freq-value" class="w-8 text-center font-bold text-[18px]">3</span>
+                        <button class="w-8 h-8 rounded-full bg-white flex items-center justify-center border border-surface-container-highest font-bold hover:bg-surface-container active:scale-90 transition-all" onclick="adjustCustomFreq(1)" type="button">+</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Single Habit Notification Toggle -->
+            <div class="flex items-center justify-between p-4 bg-surface-container-lowest rounded-2xl shadow-[0_15px_30px_-5px_rgba(45,52,54,0.03)] border border-surface-container">
+                <div class="flex items-center gap-sm">
+                    <span class="material-symbols-outlined text-primary">notifications_active</span>
+                    <div class="text-left">
+                        <span class="font-label-sm text-label-sm text-on-surface block font-bold leading-none">Hatırlatıcı Bildirimi</span>
+                        <span class="text-[11px] text-on-surface-variant/70 leading-none">Bu alışkanlık için hatırlatıcılar al</span>
+                    </div>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="add-habit-reminder-toggle" class="sr-only peer" checked onchange="toggleReminderTimeGroup()">
+                    <div class="w-11 h-6 bg-surface-container rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-surface-variant after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                </label>
+            </div>
+
+            <!-- Custom Reminder Scheduler Time & Day (Dynamic) -->
+            <div id="add-habit-reminder-time-group" class="flex flex-col gap-sm p-4 bg-surface-container-low rounded-2xl border border-surface-container-high shadow-sm my-xs">
+                <div class="flex items-center justify-between">
+                    <label class="font-label-sm text-label-sm text-on-surface-variant font-bold">Bildirim Saati</label>
+                    <input type="time" id="add-habit-reminder-time" class="bg-white border-none rounded-xl py-1.5 px-3 font-body-md text-on-surface focus:ring-2 focus:ring-primary-container outline-none" value="09:00" />
+                </div>
+                <!-- Conditional day selector (weekly/monthly) -->
+                <div id="add-habit-reminder-day-container" class="hidden flex items-center justify-between mt-sm">
+                    <label id="add-habit-reminder-day-label" class="font-label-sm text-label-sm text-on-surface-variant font-bold">Bildirim Günü</label>
+                    <select id="add-habit-reminder-day" class="bg-white border-none rounded-xl py-1.5 px-3 font-body-md text-on-surface focus:ring-2 focus:ring-primary-container outline-none">
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- Accent Color Picker -->
+            <div class="flex flex-col gap-xs">
+                <label class="font-label-md text-label-md text-on-surface-variant px-1">Renk Seçimi</label>
+                <div class="flex items-center gap-md bg-surface-container-lowest p-4 rounded-2xl shadow-[0_15px_30px_-5px_rgba(45,52,54,0.05)]">
+                    <div class="grid grid-cols-5 gap-4 w-full justify-items-center">
+                        <button class="w-8 h-8 rounded-full bg-[#006b5a] active-habit-ring transition-transform active:scale-90" onclick="selectColorBtn(this, '#006b5a')" type="button"></button>
+                        <button class="w-8 h-8 rounded-full bg-[#FFD966] transition-transform active:scale-90" onclick="selectColorBtn(this, '#FFD966')" type="button"></button>
+                        <button class="w-8 h-8 rounded-full bg-[#9e4037] transition-transform active:scale-90" onclick="selectColorBtn(this, '#9e4037')" type="button"></button>
+                        <button class="w-8 h-8 rounded-full bg-[#67558c] transition-transform active:scale-90" onclick="selectColorBtn(this, '#67558c')" type="button"></button>
+                        <button class="w-8 h-8 rounded-full bg-[#fe8a7c] transition-transform active:scale-90" onclick="selectColorBtn(this, '#fe8a7c')" type="button"></button>
+                        <button class="w-8 h-8 rounded-full bg-[#bdc9c4] transition-transform active:scale-90" onclick="selectColorBtn(this, '#bdc9c4')" type="button"></button>
+                        <button class="w-8 h-8 rounded-full bg-[#4f94e8] transition-transform active:scale-90" onclick="selectColorBtn(this, '#4f94e8')" type="button"></button>
+                        <button class="w-8 h-8 rounded-full bg-[#e25c80] transition-transform active:scale-90" onclick="selectColorBtn(this, '#e25c80')" type="button"></button>
+                        <button class="w-8 h-8 rounded-full bg-[#e88d30] transition-transform active:scale-90" onclick="selectColorBtn(this, '#e88d30')" type="button"></button>
+                        <button class="w-8 h-8 rounded-full bg-[#14b8a6] transition-transform active:scale-90" onclick="selectColorBtn(this, '#14b8a6')" type="button"></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Create Button -->
+            <div class="pt-2">
+                <button id="btn-create-submit" class="w-full bg-primary text-on-primary py-5 rounded-2xl font-headline-sm text-headline-sm shadow-lg hover:opacity-90 active:scale-[0.97] transition-all flex items-center justify-center gap-base">
+                    <span>Alışkanlığı Oluştur</span>
+                    <span class="material-symbols-outlined">auto_awesome</span>
+                </button>
+            </div>
+        </form>
+    </section>
+
+    <!-- SCREEN 4: PROFILE -->
+    <section id="screen-profile" class="screen-view hidden max-w-md mx-auto px-6 pt-8 space-y-8">
+        <!-- Profile Identity Hero -->
+        <section class="text-center space-y-4">
+            <div class="relative inline-block group cursor-pointer" onclick="document.getElementById('profile-avatar-input').click()" title="Fotoğraf Değiştir">
+                <div class="w-32 h-32 rounded-full p-1 bg-gradient-to-tr from-primary to-primary-container mx-auto shadow-md relative group">
+                    <div id="profile-avatar-container" class="w-full h-full rounded-full overflow-hidden border-4 border-white bg-surface-container flex items-center justify-center text-on-surface-variant transition-transform group-hover:scale-105">
+                        <span class="material-symbols-outlined text-[64px]" style="font-variation-settings: 'FILL' 1;">person</span>
+                    </div>
+                    <!-- Hover overlay for premium feedback -->
+                    <div class="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity duration-200">
+                        <span class="material-symbols-outlined text-2xl">photo_camera</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col items-center justify-center gap-1">
+                <!-- Username Display Group -->
+                <div id="profile-name-display-group" class="flex items-center justify-center gap-sm group">
+                    <h2 id="profile-display-name" class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface select-none">Kullanıcı Adı</h2>
+                    <button onclick="enableProfileNameEdit()" class="opacity-60 hover:opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity p-1 rounded-full hover:bg-surface-container text-on-surface-variant/60 hover:text-on-surface" title="Adı Düzenle">
+                        <span class="material-symbols-outlined text-[18px]">edit</span>
+                    </button>
+                </div>
+                <!-- Username Edit Group -->
+                <div id="profile-name-edit-group" class="hidden flex items-center justify-center gap-xs w-full max-w-[280px] bg-surface-container-low p-1.5 rounded-2xl border border-surface-container-high/60 my-1">
+                    <input type="text" id="profile-name-input" class="bg-white border-none rounded-xl py-1 px-3 w-full text-sm font-semibold text-on-surface focus:ring-2 focus:ring-primary-container outline-none" placeholder="Kullanıcı Adı" autocomplete="off" />
+                    <button onclick="saveProfileName()" class="bg-primary text-white p-1.5 rounded-xl active:scale-95 transition-all shrink-0 flex items-center justify-center" title="Kaydet">
+                        <span class="material-symbols-outlined text-[16px] font-bold">check</span>
+                    </button>
+                    <button onclick="cancelProfileNameEdit()" class="bg-surface-container text-on-surface-variant/60 p-1.5 rounded-xl active:scale-95 transition-all shrink-0 flex items-center justify-center" title="İptal">
+                        <span class="material-symbols-outlined text-[16px] font-bold">close</span>
+                    </button>
+                </div>
+                <p class="font-body-md text-on-surface-variant">Kendimin daha iyi bir versiyonu için, her gün adım adım.</p>
+                <div class="flex justify-center gap-2 mt-3">
+                    <button onclick="document.getElementById('profile-avatar-input').click()" class="bg-primary/10 text-primary px-4 py-2 rounded-full text-xs font-bold hover:bg-primary/20 transition-all flex items-center gap-1 active:scale-95">
+                        <span class="material-symbols-outlined text-[16px]">photo_camera</span> Fotoğraf Seç
+                    </button>
+                    <button id="btn-delete-avatar" onclick="event.stopPropagation(); deleteAvatar()" class="bg-error/10 text-error px-4 py-2 rounded-full text-xs font-bold hover:bg-error/20 transition-all hidden flex items-center gap-1 active:scale-95">
+                        <span class="material-symbols-outlined text-[16px]">delete</span> Fotoğrafı Sil
+                    </button>
+                    <input type="file" id="profile-avatar-input" class="hidden" accept="image/*" onchange="uploadAvatar(this)" />
+                </div>
+            </div>
+        </section>
+
+        <!-- Goals Section -->
+        <section class="space-y-4 pt-4">
+            <div class="flex justify-between items-center px-1">
+                <h3 class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant">Hedeflerim</h3>
+                <button onclick="toggleAddGoalForm()" class="bg-primary text-white p-1 rounded-full hover:opacity-90 transition-all flex items-center justify-center active:scale-90" title="Hedef Ekle">
+                    <span class="material-symbols-outlined text-[18px]">add</span>
+                </button>
+            </div>
+
+            <!-- Dynamic New Goal Form Card -->
+            <div id="add-goal-form-card" class="bg-white rounded-3xl p-md shadow-[0_15px_20px_rgba(45,52,54,0.04)] border border-surface-container hidden space-y-sm">
+                <div class="flex items-center justify-between pb-1 border-b border-surface-container">
+                    <span id="goal-form-title" class="font-label-sm text-label-sm text-primary font-bold">Yeni Hedef Belirle</span>
+                    <button onclick="toggleAddGoalForm(false)" class="text-on-surface-variant/40 hover:text-on-surface"><span class="material-symbols-outlined text-[18px]">close</span></button>
+                </div>
+                <input type="hidden" id="edit-goal-id" value="" />
+                <div class="flex flex-col gap-xs">
+                    <label class="text-xs font-bold text-on-surface-variant px-1">Hedef İsmi</label>
+                    <input id="goal-name-input" class="w-full bg-surface-container-low border-none rounded-xl py-2.5 px-3 font-body-md text-on-surface focus:ring-2 focus:ring-primary-container outline-none" placeholder="Örn: 5 Kilogram Ver, Yazılım Öğren" type="text" autocomplete="off" />
+                </div>
+                <div class="flex flex-col gap-xs">
+                    <label class="text-xs font-bold text-on-surface-variant px-1">Hedef Tarihi</label>
+                    <input id="goal-date-input" class="w-full bg-surface-container-low border-none rounded-xl py-2.5 px-3 font-body-md text-on-surface focus:ring-2 focus:ring-primary-container outline-none" type="date" />
+                </div>
+                <div class="flex flex-col gap-xs">
+                    <label class="text-xs font-bold text-on-surface-variant px-1">Şimdiki Durum (İsteğe Bağlı)</label>
+                    <input id="goal-current-input" class="w-full bg-surface-container-low border-none rounded-xl py-2.5 px-3 font-body-md text-on-surface focus:ring-2 focus:ring-primary-container outline-none" placeholder="Örn: Kilom 100 (Hedefim 85)" type="text" autocomplete="off" />
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button onclick="saveGoalSubmit()" class="bg-primary text-white font-label-md px-5 py-2 rounded-xl active:scale-95 transition-all text-xs">Kaydet</button>
+                    <button onclick="toggleAddGoalForm(false)" class="bg-surface-container text-on-surface-variant font-label-md px-5 py-2 rounded-xl active:scale-95 transition-all text-xs">İptal</button>
+                </div>
+            </div>
+
+            <!-- Dynamic Goals List -->
+            <div id="profile-goals-list" class="space-y-sm">
+                <!-- Dynamic goals populated by JS -->
+            </div>
+        </section>
+
+        <!-- Achievements Grid -->
+        <section class="space-y-4 pb-8">
+            <h3 class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant px-1">Başarılarım</h3>
+            <div class="grid grid-cols-2 gap-4">
+                <!-- Achievement 1 -->
+                <div class="bg-surface-container-lowest p-5 rounded-3xl shadow-[0_15px_20px_-5px_rgba(45,52,54,0.04)] flex flex-col items-center text-center gap-2 border-l-4 border-primary group hover:-translate-y-1 transition-all duration-300">
+                    <div class="w-14 h-14 bg-primary-container rounded-full flex items-center justify-center text-on-primary-container mb-2">
+                        <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+                    </div>
+                    <span class="font-label-sm text-label-sm text-primary">Zincir Ustası</span>
+                    <p class="text-[11px] text-on-surface-variant">Herhangi bir alışkanlıkta 7 günlük seri yaptın.</p>
+                </div>
+                <!-- Achievement 2 -->
+                <div class="bg-surface-container-lowest p-5 rounded-3xl shadow-[0_15px_20px_-5px_rgba(45,52,54,0.04)] flex flex-col items-center text-center gap-2 border-l-4 border-tertiary-container group hover:-translate-y-1 transition-all duration-300">
+                    <div class="w-14 h-14 bg-tertiary-container rounded-full flex items-center justify-center text-on-tertiary-container mb-2">
+                        <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+                    </div>
+                    <span class="font-label-sm text-label-sm text-tertiary">İstikrarlı</span>
+                    <p class="text-[11px] text-on-surface-variant">Son 7 günde 10'dan fazla alışkanlık tamamladın.</p>
+                </div>
+                <!-- Achievement 3 -->
+                <div class="bg-surface-container-lowest p-5 rounded-3xl shadow-[0_15px_20px_-5px_rgba(45,52,54,0.04)] flex flex-col items-center text-center gap-2 border-l-4 border-[#f59e0b] group hover:-translate-y-1 transition-all duration-300">
+                    <div class="w-14 h-14 bg-[#f59e0b]/10 rounded-full flex items-center justify-center text-[#f59e0b] mb-2">
+                        <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">task_alt</span>
+                    </div>
+                    <span class="font-label-sm text-label-sm text-[#f59e0b]">Kusursuz Gün</span>
+                    <p class="text-[11px] text-on-surface-variant">Tek bir günde tüm hedeflerini tamamladın.</p>
+                </div>
+                <!-- Achievement 4 -->
+                <div class="bg-surface-container-lowest p-5 rounded-3xl shadow-[0_15px_20px_-5px_rgba(45,52,54,0.04)] flex flex-col items-center text-center gap-2 border-l-4 border-tertiary group hover:-translate-y-1 transition-all duration-300">
+                    <div class="w-14 h-14 bg-tertiary-container rounded-full flex items-center justify-center text-tertiary mb-2">
+                        <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">history_edu</span>
+                    </div>
+                    <span class="font-label-sm text-label-sm text-tertiary">Söz Yazarı</span>
+                    <p class="text-[11px] text-on-surface-variant">Günlüğe toplamda 5 adet not kaydettin.</p>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <!-- SCREEN 5: SETTINGS -->
+    <section id="screen-settings" class="screen-view hidden max-w-md mx-auto px-6 pt-8 space-y-8">
+        <section class="space-y-3 pb-8">
+            <h3 class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant px-1">Ayarlar</h3>
+            <div class="bg-surface-container-lowest rounded-3xl shadow-[0_15px_20px_-5px_rgba(45,52,54,0.04)] overflow-hidden">
+                <!-- Notifications (Interactive Toggle Switch) -->
+                <div class="w-full flex items-center justify-between p-5 hover:bg-surface-container transition-colors group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                            <span class="material-symbols-outlined">notifications</span>
+                        </div>
+                        <div class="text-left">
+                            <p class="font-body-md text-on-surface font-semibold">Genel Bildirimler</p>
+                            <p class="text-[12px] text-on-surface-variant">Tüm hatırlatıcıları aç/kapat</p>
+                        </div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="settings-notifications-toggle" class="sr-only peer" checked>
+                        <div class="w-11 h-6 bg-surface-container rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-surface-variant after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                </div>
+
+                <div class="h-[1px] bg-surface-container mx-5"></div>
+                <!-- Export Data (Backup) -->
+                <button id="btn-export-backup" class="w-full flex items-center justify-between p-5 hover:bg-surface-container transition-colors group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-2xl bg-secondary/10 flex items-center justify-center text-secondary">
+                            <span class="material-symbols-outlined">database</span>
+                        </div>
+                        <div class="text-left">
+                            <p class="font-body-md text-on-surface font-semibold">Verileri Dışa Aktar</p>
+                            <p class="text-[12px] text-on-surface-variant">Tüm alışkanlık geçmişini JSON olarak indir</p>
+                        </div>
+                    </div>
+                    <span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">download</span>
+                </button>
+                <div class="h-[1px] bg-surface-container mx-5"></div>
+                <!-- Privacy -->
+                <button class="w-full flex items-center justify-between p-5 hover:bg-surface-container transition-colors group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-2xl bg-on-surface-variant/10 flex items-center justify-center text-on-surface-variant">
+                            <span class="material-symbols-outlined">lock</span>
+                        </div>
+                        <div class="text-left">
+                            <p class="font-body-md text-on-surface font-semibold">Gizlilik &amp; Güvenlik</p>
+                            <p class="text-[12px] text-on-surface-variant">Hesap erişimini yönet</p>
+                        </div>
+                    </div>
+                    <span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+                </button>
+            </div>
+            <!-- Clear database -->
+            <button id="btn-reset-db" class="w-full mt-4 p-5 rounded-3xl bg-secondary-container/20 text-secondary font-label-md flex items-center justify-center gap-2 hover:bg-secondary-container/30 transition-all scale-100 active:scale-95">
+                <span class="material-symbols-outlined">logout</span>
+                Verileri Sıfırla
+            </button>
+        </section>
+    </section>
+
+    <!-- BottomNavBar -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white/80 dark:bg-black/60 backdrop-blur-xl border-t border-surface-container-high/40 px-2 sm:px-6 py-2 flex justify-around items-center z-50 max-w-md mx-auto rounded-t-3xl shadow-[0_-10px_30px_rgba(0,0,0,0.03)] pb-safe">
+        <!-- Home Button -->
+        <button id="nav-btn-dashboard" class="nav-btn flex-1 flex flex-col items-center justify-center text-primary rounded-2xl py-1.5 active:scale-95 transition-all duration-200" onclick="switchTab('dashboard')">
+            <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">home</span>
+            <span class="font-label-sm text-[9px] xs:text-[10px] font-bold whitespace-nowrap">Ana Sayfa</span>
+        </button>
+        <!-- Progress Button -->
+        <button id="nav-btn-progress" class="nav-btn flex-1 flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container rounded-2xl py-1.5 active:scale-95 transition-all duration-200" onclick="switchTab('progress')">
+            <span class="material-symbols-outlined text-[20px]">analytics</span>
+            <span class="font-label-sm text-[9px] xs:text-[10px] font-semibold whitespace-nowrap">Grafikler</span>
+        </button>
+        <!-- Add FAB Button (Centered) -->
+        <button id="nav-btn-add-habit" class="flex-1 flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container rounded-2xl py-1.5 active:scale-90 transition-transform -translate-y-3" onclick="switchTab('add-habit')">
+            <div class="w-11 h-11 bg-primary-container text-primary rounded-full flex items-center justify-center shadow-lg hover:shadow-primary/30 transition-all">
+                <span class="material-symbols-outlined text-[28px]">add</span>
+            </div>
+        </button>
+        <!-- Profile Button -->
+        <button id="nav-btn-profile" class="nav-btn flex-1 flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container rounded-2xl py-1.5 active:scale-95 transition-all duration-200" onclick="switchTab('profile')">
+            <span class="material-symbols-outlined text-[20px]">track_changes</span>
+            <span class="font-label-sm text-[9px] xs:text-[10px] font-semibold whitespace-nowrap">Hedeflerim</span>
+        </button>
+        <!-- Settings Button -->
+        <button id="nav-btn-settings" class="nav-btn flex-1 flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container rounded-2xl py-1.5 active:scale-95 transition-all duration-200" onclick="switchTab('settings')">
+            <span class="material-symbols-outlined text-[20px]">settings</span>
+            <span class="font-label-sm text-[9px] xs:text-[10px] font-semibold whitespace-nowrap">Ayarlar</span>
+        </button>
+    </nav>
+
+    <script src="app.js"></script>
+</body>
+</html>

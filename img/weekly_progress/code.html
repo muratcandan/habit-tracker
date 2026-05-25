@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Weekly Progress - HabitFlow</title>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-variant": "#e1e3e4",
+                    "primary-container": "#7ed9c3",
+                    "tertiary-fixed-dim": "#d2bcfb",
+                    "secondary-fixed": "#ffdad5",
+                    "on-error-container": "#93000a",
+                    "on-secondary-container": "#75221b",
+                    "surface-dim": "#d9dadb",
+                    "secondary": "#9e4037",
+                    "surface-container": "#edeeef",
+                    "surface": "#f8f9fa",
+                    "on-secondary-fixed": "#410001",
+                    "surface-bright": "#f8f9fa",
+                    "tertiary": "#67558c",
+                    "inverse-primary": "#7cd7c1",
+                    "on-tertiary-fixed": "#220f44",
+                    "tertiary-fixed": "#ebddff",
+                    "on-primary-fixed-variant": "#005144",
+                    "on-error": "#ffffff",
+                    "inverse-on-surface": "#f0f1f2",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed-dim": "#7cd7c1",
+                    "outline-variant": "#bdc9c4",
+                    "background": "#f8f9fa",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#f3f4f5",
+                    "inverse-surface": "#2e3132",
+                    "outline": "#6e7a75",
+                    "error": "#ba1a1a",
+                    "tertiary-container": "#d4befd",
+                    "primary-fixed": "#98f4dd",
+                    "on-tertiary": "#ffffff",
+                    "on-surface-variant": "#3e4946",
+                    "on-secondary": "#ffffff",
+                    "on-surface": "#191c1d",
+                    "surface-container-high": "#e7e8e9",
+                    "on-secondary-fixed-variant": "#7f2922",
+                    "on-primary-fixed": "#00201a",
+                    "primary": "#006b5a",
+                    "secondary-container": "#fe8a7c",
+                    "on-tertiary-container": "#5c4a81",
+                    "secondary-fixed-dim": "#ffb4aa",
+                    "on-tertiary-fixed-variant": "#4f3d73",
+                    "surface-tint": "#006b5a",
+                    "surface-container-highest": "#e1e3e4",
+                    "on-background": "#191c1d",
+                    "on-primary-container": "#005f50",
+                    "on-primary": "#ffffff",
+                    "sunny-yellow": "#FFD966",
+                    "lavender-soft": "#D2BCFB"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "12px",
+                    "xs": "4px",
+                    "gutter": "16px",
+                    "md": "20px",
+                    "base": "8px",
+                    "lg": "32px",
+                    "xl": "48px",
+                    "container-padding": "24px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Quicksand"],
+                    "body-md": ["Quicksand"],
+                    "headline-md": ["Quicksand"],
+                    "label-md": ["Quicksand"],
+                    "headline-sm": ["Quicksand"],
+                    "headline-lg": ["Quicksand"],
+                    "headline-lg-mobile": ["Quicksand"],
+                    "label-sm": ["Quicksand"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.03em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Quicksand', sans-serif; background-color: #f8f9fa; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .ambient-shadow { shadow: 0 15px 20px rgba(45, 52, 54, 0.05); }
+        .soft-card { background: white; border-radius: 1.5rem; transition: transform 0.2s ease; }
+        .soft-card:active { transform: scale(0.98); }
+        .chart-wave { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: dash 2s ease-in-out forwards; }
+        @keyframes dash { to { stroke-dashoffset: 0; } }
+        .dot-glow { box-shadow: 0 0 10px rgba(210, 188, 251, 0.4); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="w-full sticky top-0 bg-surface/80 backdrop-blur-md z-50 flex items-center justify-between px-gutter py-sm w-full">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<img alt="Profile" class="w-full h-full object-cover" data-alt="A professional and friendly headshot of a young man with a warm smile, set against a soft, out-of-focus natural background. The lighting is bright and airy, reflecting a modern light-mode aesthetic. The composition is clean and minimalist, focusing on a sense of approachability and personal growth, perfectly aligned with a sleek lifestyle app." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAeqqQCXtXActyQwpZ5trD2SnDLpy7oWGSsKaxBRfhs-hey_zmf-oFMbrI4oDwWsJBT5ops_EsyVoWrrUxsu8nO6tUGzfxOhlrX8JjQMiF7-4TBzw3AnLsk3W75r76hNrNgcebKCnDVth35d8oxQ4-F4CMFoD2Xc0nqiIhDmeZK0YtROqUvZ1Ffz6qqXqdXCbNXjLTNurZfM_a7iJtWPPOTUTIN6Q0tflr8VBImUBAoBYvNGrBuUkdSakeafb9uu1VoEOkbJQizzB8"/>
+</div>
+<h1 class="font-headline-sm text-headline-sm text-primary">Progress Report</h1>
+</div>
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-opacity p-base">calendar_today</button>
+</header>
+<main class="px-container-padding py-md max-w-4xl mx-auto space-y-lg">
+<!-- Summary Stats Bento Grid -->
+<section class="grid grid-cols-2 gap-md">
+<!-- Current Streak -->
+<div class="soft-card p-md shadow-[0_15px_20px_rgba(45,52,54,0.05)] border-l-4 border-sunny-yellow flex flex-col justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Current Streak</span>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mt-xs">12 Days</h2>
+</div>
+<div class="flex items-center gap-xs mt-sm text-primary">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+<span class="font-label-md text-label-md">Best ever!</span>
+</div>
+</div>
+<!-- Total Completed -->
+<div class="soft-card p-md shadow-[0_15px_20px_rgba(45,52,54,0.05)] border-l-4 border-tertiary-container flex flex-col justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Total Completed</span>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mt-xs">148</h2>
+</div>
+<div class="flex items-center gap-xs mt-sm text-tertiary">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-md text-label-md">+8 this week</span>
+</div>
+</div>
+</section>
+<!-- Weekly Wave Chart -->
+<section class="soft-card p-lg shadow-[0_15px_20px_rgba(45,52,54,0.05)]">
+<div class="flex justify-between items-end mb-lg">
+<div>
+<h3 class="font-headline-sm text-headline-sm">Activity Trend</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Your completion rate is up 12%</p>
+</div>
+<div class="bg-surface-container px-sm py-xs rounded-full flex items-center gap-xs">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">This Week</span>
+</div>
+</div>
+<div class="h-48 w-full relative">
+<svg class="w-full h-full preserve-3d" viewbox="0 0 400 100">
+<path class="chart-wave" d="M0,80 Q50,20 100,60 T200,40 T300,70 T400,30" fill="none" stroke="#7ed9c3" stroke-linecap="round" stroke-width="4"></path>
+<path d="M0,80 Q50,20 100,60 T200,40 T300,70 T400,30 V100 H0 Z" fill="url(#grad1)" opacity="0.1"></path>
+<defs>
+<lineargradient id="grad1" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:#7ed9c3;stop-opacity:1"></stop>
+<stop offset="100%" style="stop-color:#7ed9c3;stop-opacity:0"></stop>
+</lineargradient>
+</defs>
+</svg>
+<div class="flex justify-between mt-sm text-on-surface-variant font-label-sm">
+<span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+</div>
+</div>
+</section>
+<!-- Habit Breakdown List -->
+<section class="space-y-md">
+<h3 class="font-headline-sm text-headline-sm px-xs">Habit Performance</h3>
+<!-- Habit Row 1 -->
+<div class="soft-card p-md shadow-[0_15px_20px_rgba(45,52,54,0.05)] flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-xl bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">auto_stories</span>
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg">Morning Reading</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">6/7 days completed</p>
+</div>
+</div>
+<div class="flex gap-xs">
+<div class="w-6 h-6 rounded-full bg-primary dot-glow"></div>
+<div class="w-6 h-6 rounded-full bg-primary dot-glow"></div>
+<div class="w-6 h-6 rounded-full bg-primary dot-glow"></div>
+<div class="w-6 h-6 rounded-full bg-primary dot-glow"></div>
+<div class="w-6 h-6 rounded-full bg-surface-container"></div>
+<div class="w-6 h-6 rounded-full bg-primary dot-glow"></div>
+<div class="w-6 h-6 rounded-full bg-primary dot-glow"></div>
+</div>
+</div>
+<!-- Habit Row 2 -->
+<div class="soft-card p-md shadow-[0_15px_20px_rgba(45,52,54,0.05)] flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-xl bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">self_improvement</span>
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg">Meditation</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">5/7 days completed</p>
+</div>
+</div>
+<div class="flex gap-xs">
+<div class="w-6 h-6 rounded-full bg-tertiary-container"></div>
+<div class="w-6 h-6 rounded-full bg-tertiary-container"></div>
+<div class="w-6 h-6 rounded-full bg-surface-container"></div>
+<div class="w-6 h-6 rounded-full bg-tertiary-container"></div>
+<div class="w-6 h-6 rounded-full bg-tertiary-container"></div>
+<div class="w-6 h-6 rounded-full bg-tertiary-container"></div>
+<div class="w-6 h-6 rounded-full bg-surface-container"></div>
+</div>
+</div>
+<!-- Habit Row 3 -->
+<div class="soft-card p-md shadow-[0_15px_20px_rgba(45,52,54,0.05)] flex items-center justify-between">
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-xl bg-sunny-yellow/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">fitness_center</span>
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg">Evening Yoga</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">7/7 days completed</p>
+</div>
+</div>
+<div class="flex gap-xs">
+<div class="w-6 h-6 rounded-full bg-sunny-yellow"></div>
+<div class="w-6 h-6 rounded-full bg-sunny-yellow"></div>
+<div class="w-6 h-6 rounded-full bg-sunny-yellow"></div>
+<div class="w-6 h-6 rounded-full bg-sunny-yellow"></div>
+<div class="w-6 h-6 rounded-full bg-sunny-yellow"></div>
+<div class="w-6 h-6 rounded-full bg-sunny-yellow"></div>
+<div class="w-6 h-6 rounded-full bg-sunny-yellow"></div>
+</div>
+</div>
+</section>
+<!-- Insights Illustration -->
+<section class="bg-primary/5 rounded-3xl p-lg flex flex-col md:flex-row items-center gap-lg">
+<div class="flex-1 space-y-sm">
+<h3 class="font-headline-sm text-headline-sm text-primary">Weekend Warrior</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">You're most consistent on Saturdays. Try scheduling your hardest habit for then to keep the momentum going!</p>
+<button class="bg-primary text-on-primary px-lg py-sm rounded-full font-label-md hover:opacity-90 transition-all scale-95 active:scale-90">View Tips</button>
+</div>
+<div class="w-32 h-32 flex-shrink-0">
+<img alt="Yoga Insight" class="w-full h-full object-cover rounded-full shadow-lg" data-alt="A serene, minimalist digital illustration of a person in a peaceful yoga pose, surrounded by soft, flowing lavender and sunny yellow light orbs. The style is clean and playful, with gentle gradients and high-key lighting. The background is a soft, warm gray, maintaining a professional yet encouraging atmosphere for a progress-tracking application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmYl9EMXt5qk8ShFWoGfehaZNkTIv79JkpDXdlTucq4NqwwiEW9qFR_EWrNq_8HPipTc9AGP5pBQgURDileIEopLdpCHEn7SBSjd71YJRZO_jXn5-FmD9Ph8ynBy9TqOxLvENuQeraq_E5Wv2GPygKJnH8gW2SwYr7S3cOEFvoit9AKR-99FM_AK6RGQvxgD2KTVU41JFnorIROQWv0ibpZNIRtQIAfG_5ZrxDI0xcN4f_zrU-gytALImGZFGVH5gYsuB186aNnes"/>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-surface/80 backdrop-blur-md shadow-[0_-4px_20px_rgba(45,52,54,0.05)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container rounded-full transition-all duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-sm text-label-sm mt-1">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 scale-110 active:scale-95 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="font-label-sm text-label-sm mt-1">Progress</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container rounded-full transition-all duration-200" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label-sm text-label-sm mt-1">Add</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container rounded-full transition-all duration-200" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm mt-1">Profile</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interaction for dots
+        document.querySelectorAll('.w-6.h-6').forEach(dot => {
+            dot.addEventListener('mouseenter', () => {
+                dot.classList.add('scale-125');
+            });
+            dot.addEventListener('mouseleave', () => {
+                dot.classList.remove('scale-125');
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-variant": "#e1e3e4",
+                    "primary-container": "#7ed9c3",
+                    "tertiary-fixed-dim": "#d2bcfb",
+                    "secondary-fixed": "#ffdad5",
+                    "on-error-container": "#93000a",
+                    "on-secondary-container": "#75221b",
+                    "surface-dim": "#d9dadb",
+                    "secondary": "#9e4037",
+                    "surface-container": "#edeeef",
+                    "surface": "#f8f9fa",
+                    "on-secondary-fixed": "#410001",
+                    "surface-bright": "#f8f9fa",
+                    "tertiary": "#67558c",
+                    "inverse-primary": "#7cd7c1",
+                    "on-tertiary-fixed": "#220f44",
+                    "tertiary-fixed": "#ebddff",
+                    "on-primary-fixed-variant": "#005144",
+                    "on-error": "#ffffff",
+                    "inverse-on-surface": "#f0f1f2",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed-dim": "#7cd7c1",
+                    "outline-variant": "#bdc9c4",
+                    "background": "#f8f9fa",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#f3f4f5",
+                    "inverse-surface": "#2e3132",
+                    "outline": "#6e7a75",
+                    "error": "#ba1a1a",
+                    "tertiary-container": "#d4befd",
+                    "primary-fixed": "#98f4dd",
+                    "on-tertiary": "#ffffff",
+                    "on-surface-variant": "#3e4946",
+                    "on-secondary": "#ffffff",
+                    "on-surface": "#191c1d",
+                    "surface-container-high": "#e7e8e9",
+                    "on-secondary-fixed-variant": "#7f2922",
+                    "on-primary-fixed": "#00201a",
+                    "primary": "#006b5a",
+                    "secondary-container": "#fe8a7c",
+                    "on-tertiary-container": "#5c4a81",
+                    "secondary-fixed-dim": "#ffb4aa",
+                    "on-tertiary-fixed-variant": "#4f3d73",
+                    "surface-tint": "#006b5a",
+                    "surface-container-highest": "#e1e3e4",
+                    "on-background": "#191c1d",
+                    "on-primary-container": "#005f50",
+                    "on-primary": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "12px",
+                    "xs": "4px",
+                    "gutter": "16px",
+                    "md": "20px",
+                    "base": "8px",
+                    "lg": "32px",
+                    "xl": "48px",
+                    "container-padding": "24px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Quicksand"],
+                    "body-md": ["Quicksand"],
+                    "headline-md": ["Quicksand"],
+                    "label-md": ["Quicksand"],
+                    "headline-sm": ["Quicksand"],
+                    "headline-lg": ["Quicksand"],
+                    "headline-lg-mobile": ["Quicksand"],
+                    "label-sm": ["Quicksand"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.03em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Quicksand', sans-serif; background-color: #f8f9fa; }
+        .habit-card-shadow { shadow: 0 15px 20px rgba(45, 52, 54, 0.05); }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-habit-check {
+            transform: scale(0.9);
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        @media (min-width: 768px) {
+            .bento-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="w-full sticky top-0 bg-surface/80 backdrop-blur-md z-50 flex items-center justify-between px-container-padding py-sm">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A professional close-up portrait of a cheerful person with a warm smile, set against a soft-focus natural background. The lighting is bright and airy, reflecting a morning glow that aligns with a clean, light-mode design aesthetic. The image uses a soft color palette of gentle greens and whites to create a welcoming and optimistic mood for a personal dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhzNipv3W0qaHCNZNKonq2dDb_WWC_9Vq6IBeHWhjpD5AOQNHuKhZSgiHmq3Vfh3XUP8NPwNGeoo5xTQ-e-X841GFdpdqixrqm6gX8ewc81_7ow84rrw1F1pmuo8-EBOx1r_0qKAehkKR9w0Zt5WuHCIroKizDoh1AdIBmpNjMy3TImviH7AxQ9iGyTvydX0IPl1he6zkXlOen9HKY_51e8TcRd1c3bzVZbasodJAMkr4-nn5my-HDbJzFY3KhcqYR3bbPndzvo3E"/>
+</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm text-primary">Good morning, User</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Tuesday, October 24</p>
+</div>
+</div>
+<button class="material-symbols-outlined p-2 rounded-full hover:bg-surface-container transition-opacity text-on-surface-variant" data-icon="calendar_today">calendar_today</button>
+</header>
+<main class="px-container-padding py-md space-y-lg max-w-4xl mx-auto">
+<!-- Weekly Progress Summary -->
+<section class="bg-white rounded-xl p-md shadow-[0_15px_20px_rgba(45,52,54,0.05)] border-l-4 border-primary">
+<div class="flex justify-between items-end mb-sm">
+<div>
+<h2 class="font-headline-sm text-headline-sm">Today's Progress</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">You've completed 2 of 5 habits!</p>
+</div>
+<div class="relative w-16 h-16 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="6"></circle>
+<circle class="text-primary-container transition-all duration-1000" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="176" stroke-dashoffset="105" stroke-width="6"></circle>
+</svg>
+<span class="absolute font-label-md text-label-md text-primary">40%</span>
+</div>
+</div>
+</section>
+<!-- Daily Habits List -->
+<section class="space-y-sm">
+<div class="flex justify-between items-center">
+<h3 class="font-headline-sm text-headline-sm">Daily Habits</h3>
+<span class="font-label-sm text-label-sm text-primary bg-primary-container/20 px-3 py-1 rounded-full">Morning Flow</span>
+</div>
+<div class="space-y-sm">
+<!-- Habit Card 1 -->
+<div class="group bg-white p-sm rounded-xl flex items-center justify-between shadow-[0_15px_20px_rgba(45,52,54,0.05)] border-l-4 border-primary-container hover:scale-[1.01] transition-transform cursor-pointer">
+<div class="flex items-center gap-sm">
+<div class="w-12 h-12 rounded-xl bg-primary-container/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="water_drop">water_drop</span>
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg">Drink Water</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">2L goal • 8 glasses</p>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full border-2 border-primary-container flex items-center justify-center text-primary-container transition-all duration-200 active:scale-90" onclick="this.classList.toggle('bg-primary-container'); this.classList.toggle('text-white')">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check</span>
+</button>
+</div>
+<!-- Habit Card 2 -->
+<div class="bg-white p-sm rounded-xl flex items-center justify-between shadow-[0_15px_20px_rgba(45,52,54,0.05)] border-l-4 border-tertiary-container hover:scale-[1.01] transition-transform cursor-pointer">
+<div class="flex items-center gap-sm">
+<div class="w-12 h-12 rounded-xl bg-tertiary-container/10 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" data-icon="self_improvement">self_improvement</span>
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg">Meditate</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">10 mins • Zen session</p>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full border-2 border-tertiary-container flex items-center justify-center text-tertiary-container transition-all duration-200 active:scale-90">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check</span>
+</button>
+</div>
+<!-- Habit Card 3 -->
+<div class="bg-white p-sm rounded-xl flex items-center justify-between shadow-[0_15px_20px_rgba(45,52,54,0.05)] border-l-4 border-secondary-container hover:scale-[1.01] transition-transform cursor-pointer">
+<div class="flex items-center gap-sm">
+<div class="w-12 h-12 rounded-xl bg-secondary-container/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" data-icon="auto_stories">auto_stories</span>
+</div>
+<div>
+<h4 class="font-body-lg text-body-lg">Read 20 mins</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Current: Atomic Habits</p>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full bg-secondary-container text-white border-2 border-secondary-container flex items-center justify-center transition-all duration-200 active:scale-90">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Daily Note Section -->
+<section class="space-y-sm">
+<h3 class="font-headline-sm text-headline-sm">Daily Note</h3>
+<div class="bg-white rounded-xl p-md shadow-[0_15px_20px_rgba(45,52,54,0.05)] space-y-sm">
+<div class="flex items-center gap-xs text-secondary">
+<span class="material-symbols-outlined text-[20px]" data-icon="edit_note">edit_note</span>
+<span class="font-label-md text-label-md">Reflection</span>
+</div>
+<textarea class="w-full min-h-[120px] bg-surface-container-lowest border-none focus:ring-2 focus:ring-primary-container rounded-lg p-sm font-body-md text-body-md placeholder:text-on-surface-variant/50 resize-none transition-all duration-300" placeholder="How are you feeling today? Any small wins or thoughts to capture?"></textarea>
+<div class="flex justify-end">
+<button class="bg-primary text-white px-gutter py-2 rounded-full font-label-md hover:opacity-90 transition-all active:scale-95">
+                        Save Thought
+                    </button>
+</div>
+</div>
+</section>
+<!-- Visual Inspo / Empty State Prompt -->
+<section class="relative overflow-hidden rounded-2xl h-40 flex items-center px-lg">
+<div class="absolute inset-0 z-0">
+<img alt="Nature background" class="w-full h-full object-cover opacity-30" data-alt="A serene landscape featuring lush, soft green ferns and tropical leaves bathed in dappled morning sunlight. The image has a calm, organic aesthetic with a narrow depth of field, highlighting natural textures. The color palette is dominated by soft mint greens and warm highlights, creating a peaceful and encouraging atmosphere that complements a health-conscious habit tracker UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmdq7oOymRIs8x_bBBCJ7eGQTtW9v6JApga_hSmdwEUdm8a3QQ9yYWAPz-sJYHIuGnqp8UTO5TlVTiBPmHOvLHmb5duTFWanbYLqj4WHG-R5nNOTVsRSWAOaLcDp3nFWROyCmDyyO3aFsnrA9X7fyEahQ138HRSVe-dNckm4KV2DIiukw5ZNPhF3vfj_bm1GlN8D2wzfiQuy7egyIpuv21JjmrNfOThIS2wkwYoh8noS2SQC07ybdRhgKIEktVUM937SUxlvj91rQ"/>
+<div class="absolute inset-0 bg-gradient-to-r from-surface to-transparent"></div>
+</div>
+<div class="relative z-10 max-w-[200px]">
+<h4 class="font-headline-sm text-headline-sm text-primary mb-1">Consistency is key.</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Every small step counts towards your big goal.</p>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-surface/80 backdrop-blur-md shadow-[0_-4px_20px_rgba(45,52,54,0.05)] rounded-t-xl">
+<!-- Dashboard (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 scale-110 active:scale-95 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-sm text-label-sm">Dashboard</span>
+</a>
+<!-- Progress -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container rounded-full transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-sm text-label-sm">Progress</span>
+</a>
+<!-- Add FAB -->
+<button class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-transform -translate-y-4">
+<span class="material-symbols-outlined text-[32px]" data-icon="add_circle">add_circle</span>
+</button>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container rounded-full transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interaction for habit completion
+        document.querySelectorAll('button[onclick]').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const icon = this.querySelector('.material-symbols-outlined');
+                if (this.classList.contains('bg-primary-container') || this.classList.contains('bg-secondary-container')) {
+                    // It was checked, now unchecking (simplified logic for demo)
+                    this.style.transform = 'scale(1.2)';
+                    setTimeout(() => this.style.transform = 'scale(1)', 200);
+                } else {
+                    // It was unchecked, now checking
+                    this.style.transform = 'scale(0.8)';
+                    setTimeout(() => this.style.transform = 'scale(1)', 200);
+                }
+            });
+        });
+
+        // Add some "squishy" feel to cards
+        document.querySelectorAll('.group').forEach(card => {
+            card.addEventListener('mousedown', () => card.style.transform = 'scale(0.98)');
+            card.addEventListener('mouseup', () => card.style.transform = 'scale(1)');
+            card.addEventListener('mouseleave', () => card.style.transform = 'scale(1)');
+        });
+    </script>
+</body></html>
