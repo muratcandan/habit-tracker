@@ -46,8 +46,17 @@ let habits = JSON.parse(localStorage.getItem('habits')) || [
 
 let journal = JSON.parse(localStorage.getItem('journal')) || {};
 
+let fitnessLogs = JSON.parse(localStorage.getItem('fitnessLogs')) || {};
+let fitnessTemplates = JSON.parse(localStorage.getItem('fitnessTemplates')) || [
+    { id: "tpl-chest", name: "Göğüs Günü", exercises: ["Bench Press", "Incline Dumbbell Press", "Dumbbell Fly", "Dips"] },
+    { id: "tpl-triceps", name: "Arka Kol Günü", exercises: ["Triceps Pushdown", "Overhead Extension", "Skullcrusher"] },
+    { id: "tpl-legs", name: "Bacak Günü", exercises: ["Squat", "Leg Press", "Leg Extension", "Calf Raise"] },
+    { id: "tpl-cardio", name: "Kardiyo", exercises: ["Koşu Bandı", "Kondisyon Bisikleti", "Kürek Çekme"] }
+];
+
 // Selection states
 let selectedJournalDate = getTodayString();
+let selectedFitnessDate = getTodayString(); // Fitness takvim seçimi
 let selectedHabitsDate = getTodayString(); // Alışkanlıklar takvim seçimi
 let selectedCategory = 'Health'; // Default Category
 let selectedFrequency = 'daily'; // Default Frequency
@@ -58,6 +67,7 @@ let editingHabitId = null; // Track if we're inline editing a habit's name
 let selectedPerformanceRange = 'weekly'; // Toggles 'weekly', 'monthly' or 'yearly' performance grid
 let selectedActivityRange = 'weekly'; // Toggles 'weekly', 'monthly' or 'yearly' activity chart
 let selectedMoodRange = 'weekly'; // Toggles 'weekly', 'monthly' or 'yearly' mood chart
+let selectedFitnessChartRange = 'weekly'; // Toggles 'weekly', 'monthly' or 'yearly' fitness progress chart
 let goals = [];
 try {
     goals = JSON.parse(localStorage.getItem('goals')) || [];
@@ -781,6 +791,8 @@ function getSplinePath(points) {
 function saveState() {
     localStorage.setItem('habits', JSON.stringify(habits));
     localStorage.setItem('journal', JSON.stringify(journal));
+    localStorage.setItem('fitnessLogs', JSON.stringify(fitnessLogs));
+    localStorage.setItem('fitnessTemplates', JSON.stringify(fitnessTemplates));
 }
 
 // Premium System Toast Alerts
@@ -840,6 +852,7 @@ window.switchTab = function(tabId) {
     // Select all screens
     const screens = {
         'dashboard': document.getElementById('screen-dashboard'),
+        'fitness': document.getElementById('screen-fitness'),
         'progress': document.getElementById('screen-progress'),
         'add-habit': document.getElementById('screen-add-habit'),
         'profile': document.getElementById('screen-profile'),
@@ -849,6 +862,7 @@ window.switchTab = function(tabId) {
     // Update bottom nav active classes FIRST
     const navButtons = {
         'dashboard': document.getElementById('nav-btn-dashboard'),
+        'fitness': document.getElementById('nav-btn-fitness'),
         'progress': document.getElementById('nav-btn-progress'),
         'add-habit': document.getElementById('nav-btn-add-habit'),
         'profile': document.getElementById('nav-btn-profile'),
@@ -864,17 +878,19 @@ window.switchTab = function(tabId) {
             if (childDiv) {
                 if (tabId === 'add-habit') {
                     childDiv.className = "w-11 h-11 bg-primary text-white rounded-full flex items-center justify-center shadow-lg ring-4 ring-primary/20 scale-110 transition-all";
+                    btn.className = "nav-btn nav-btn-active flex-1 flex flex-col items-center justify-center py-1.5 active:scale-90 transition-transform -translate-y-3";
                 } else {
                     childDiv.className = "w-11 h-11 bg-primary-container text-primary rounded-full flex items-center justify-center shadow-lg hover:shadow-primary/30 transition-all";
+                    btn.className = "nav-btn nav-btn-inactive flex-1 flex flex-col items-center justify-center py-1.5 active:scale-90 transition-transform -translate-y-3";
                 }
             }
             return;
         }
 
         if (key === tabId) {
-            btn.className = "nav-btn flex-1 flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-2xl py-1.5 scale-110 active:scale-95 transition-all duration-200";
+            btn.className = "nav-btn nav-btn-active flex-1 flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-2xl py-1.5 scale-110 active:scale-95 transition-all duration-200";
         } else {
-            btn.className = "nav-btn flex-1 flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container rounded-2xl py-1.5 active:scale-95 transition-all duration-200";
+            btn.className = "nav-btn nav-btn-inactive flex-1 flex flex-col items-center justify-center text-on-surface-variant hover:bg-surface-container rounded-2xl py-1.5 active:scale-95 transition-all duration-200";
         }
     });
 
@@ -887,6 +903,8 @@ window.switchTab = function(tabId) {
                 try {
                     if (key === 'dashboard') {
                         renderDashboard();
+                    } else if (key === 'fitness') {
+                        renderFitnessDashboard();
                     } else if (key === 'progress') {
                         renderProgress();
                     } else if (key === 'profile') {
@@ -2625,6 +2643,18 @@ function registerServiceWorker() {
 function init() {
     updateHeader();
     initTheme();
+
+    // Auto-migrate old default templates to new ones if unchanged
+    if (fitnessTemplates.length === 3 && fitnessTemplates[0].id === 'tpl-chest' && fitnessTemplates[0].exercises.includes('Cable Crossover')) {
+        fitnessTemplates = [
+            { id: "tpl-chest", name: "Göğüs Günü", exercises: ["Bench Press", "Incline Dumbbell Press", "Dumbbell Fly", "Dips"] },
+            { id: "tpl-triceps", name: "Arka Kol Günü", exercises: ["Triceps Pushdown", "Overhead Extension", "Skullcrusher"] },
+            { id: "tpl-legs", name: "Bacak Günü", exercises: ["Squat", "Leg Press", "Leg Extension", "Calf Raise"] },
+            { id: "tpl-cardio", name: "Kardiyo", exercises: ["Koşu Bandı", "Kondisyon Bisikleti", "Kürek Çekme"] }
+        ];
+        localStorage.setItem('fitnessTemplates', JSON.stringify(fitnessTemplates));
+    }
+
     initAddHabitForm();
     initJournalSection();
     initCalendarAction();
@@ -3254,6 +3284,610 @@ window.renderMoodChart = function() {
             graphsMoodDaysRow.appendChild(btn);
         });
     }
+};
+
+// ==========================================
+// FITNESS TRACKING LOGIC
+// ==========================================
+
+function renderFitnessTimeline() {
+    const timelineRow = document.getElementById('fitness-timeline');
+    if (!timelineRow) return;
+
+    timelineRow.innerHTML = '';
+    const days = getWeekDaysForDate(selectedFitnessDate);
+    const todayStr = getTodayString();
+
+    days.forEach(day => {
+        const isSelected = day.str === selectedFitnessDate;
+        const isToday = day.str === todayStr;
+        const isFuture = day.isFuture;
+        const hasLogs = fitnessLogs[day.str] && fitnessLogs[day.str].length > 0;
+
+        const btn = document.createElement('button');
+        btn.type = "button";
+
+        if (isFuture) {
+            btn.className = "flex flex-col items-center justify-center w-10 h-10 rounded-full text-on-surface-variant/30 font-label-sm cursor-not-allowed shrink-0 relative";
+        } else if (isSelected) {
+            btn.className = "flex flex-col items-center justify-center w-10 h-10 rounded-full bg-primary text-white font-label-sm font-bold shadow-md shadow-primary/20 scale-105 transition-all shrink-0 relative";
+        } else if (isToday) {
+            btn.className = "flex flex-col items-center justify-center w-10 h-10 rounded-full border-2 border-primary text-primary font-label-sm font-semibold hover:bg-surface-container shrink-0 relative";
+        } else {
+            btn.className = "flex flex-col items-center justify-center w-10 h-10 rounded-full text-on-surface-variant font-label-sm hover:bg-surface-container shrink-0 relative";
+        }
+
+        btn.innerHTML = `
+            <span class="text-[9px] leading-none uppercase text-opacity-70">${day.label.substring(0, 1)}</span>
+            <span class="text-xs font-bold leading-none mt-0.5 mb-1">${day.dayNum}</span>
+            ${!isFuture && hasLogs ? `<span class="w-[4px] h-[4px] rounded-full ${isSelected ? 'bg-white' : 'bg-primary'} absolute bottom-1 left-1/2 -translate-x-1/2"></span>` : ''}
+        `;
+
+        if (!isFuture) {
+            btn.onclick = () => {
+                selectedFitnessDate = day.str;
+                renderFitnessTimeline();
+                renderFitnessDashboard();
+            };
+        }
+        timelineRow.appendChild(btn);
+    });
+
+    // Center scroll
+    setTimeout(() => {
+        const activeBtn = timelineRow.querySelector('.bg-primary.text-white');
+        if (activeBtn) {
+            activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
+    }, 50);
+
+    const dateDisplay = document.getElementById('fitness-date-display');
+    if (dateDisplay) {
+        if (selectedFitnessDate === todayStr) {
+            dateDisplay.textContent = 'Bugün';
+        } else {
+            const dateObj = new Date(selectedFitnessDate);
+            dateDisplay.textContent = dateObj.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+    }
+}
+
+window.isCardioExercise = function(name) {
+    if (!name) return false;
+    const n = name.toLowerCase();
+    return n.includes('koşu') || n.includes('bisiklet') || n.includes('kürek') || n.includes('kardiyo') || n.includes('cardio') || n.includes('run') || n.includes('bike') || n.includes('treadmill') || n.includes('yürüyüş') || n.includes('eliptik') || n.includes('aerobik');
+};
+
+function renderFitnessDashboard() {
+    renderFitnessTimeline();
+    const listEl = document.getElementById('fitness-exercise-list');
+    if (!listEl) return;
+    
+    listEl.innerHTML = '';
+    const logs = fitnessLogs[selectedFitnessDate] || [];
+
+    if (logs.length === 0) {
+        listEl.innerHTML = `
+            <div class="flex flex-col items-center justify-center p-8 text-center bg-surface-container/30 rounded-3xl border border-surface-container-high/30">
+                <span class="material-symbols-outlined text-4xl text-on-surface-variant/50 mb-2">sports_gymnastics</span>
+                <p class="font-body-md text-on-surface-variant">Bu gün için henüz bir hareket eklemediniz.</p>
+                <p class="text-[12px] text-on-surface-variant/70 mt-1">Hazır programları veya yeni hareket ekle butonunu kullanabilirsiniz.</p>
+            </div>
+        `;
+        return;
+    }
+
+    logs.forEach((exercise, exerciseIndex) => {
+        const card = document.createElement('div');
+        card.className = "bg-white dark:bg-black/20 rounded-3xl p-5 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.05)] border border-surface-container fitness-card";
+        
+        if (!exercise.sets || exercise.sets.length === 0) {
+            exercise.sets = [{ weight: 0, reps: 0 }];
+        }
+        const set = exercise.sets[0];
+        const isCardio = isCardioExercise(exercise.name);
+
+        card.innerHTML = `
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3 w-full">
+                    <div class="w-10 h-10 rounded-xl bg-primary-container text-primary flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined">${isCardio ? 'directions_run' : 'fitness_center'}</span>
+                    </div>
+                    <input type="text" value="${exercise.name}" onchange="updateFitnessExerciseName('${selectedFitnessDate}', ${exerciseIndex}, this.value)" class="font-headline-sm text-on-surface bg-transparent outline-none w-full border-b border-transparent focus:border-primary transition-colors py-1" placeholder="Hareket Adı (Örn: Bench Press)">
+                </div>
+                <button onclick="removeFitnessExercise('${selectedFitnessDate}', ${exerciseIndex})" class="text-error/70 hover:text-error p-2 ml-2 shrink-0">
+                    <span class="material-symbols-outlined">delete</span>
+                </button>
+            </div>
+            
+            <div class="flex items-center justify-between py-2 border-t border-surface-container-high/20">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px] text-on-surface-variant/70">${isCardio ? 'timer' : 'sports_gymnastics'}</span>
+                    <span class="font-body-sm text-on-surface-variant font-semibold">${isCardio ? 'Kardiyo Seansı' : 'Performans'}</span>
+                </div>
+                <div class="flex items-center gap-1 sm:gap-2">
+                    <div class="flex items-center bg-surface-container-lowest rounded-xl border border-surface-container-high focus-within:border-primary focus-within:ring-1 ring-primary transition-all overflow-hidden w-[80px] sm:w-24">
+                        <input type="number" value="${set.weight}" onchange="updateFitnessSet('${selectedFitnessDate}', ${exerciseIndex}, 0, 'weight', this.value)" class="w-full bg-transparent text-center font-bold text-on-surface p-2 outline-none text-xs sm:text-sm appearance-none" placeholder="0" inputmode="decimal">
+                        <span class="text-[9px] sm:text-[10px] text-on-surface-variant font-semibold pr-2 select-none">${isCardio ? 'dk' : 'kg'}</span>
+                    </div>
+                    <span class="text-on-surface-variant font-bold text-sm">x</span>
+                    <div class="flex items-center bg-surface-container-lowest rounded-xl border border-surface-container-high focus-within:border-primary focus-within:ring-1 ring-primary transition-all overflow-hidden w-[80px] sm:w-24">
+                        <input type="number" value="${set.reps}" onchange="updateFitnessSet('${selectedFitnessDate}', ${exerciseIndex}, 0, 'reps', this.value)" class="w-full bg-transparent text-center font-bold text-on-surface p-2 outline-none text-xs sm:text-sm appearance-none" placeholder="0" inputmode="numeric">
+                        <span class="text-[9px] sm:text-[10px] text-on-surface-variant font-semibold pr-2 select-none">${isCardio ? 'km/s' : 'rep'}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+        listEl.appendChild(card);
+    });
+}
+
+window.addNewExerciseRow = function() {
+    if (!fitnessLogs[selectedFitnessDate]) fitnessLogs[selectedFitnessDate] = [];
+    fitnessLogs[selectedFitnessDate].push({
+        id: "ex-" + Date.now(),
+        name: "",
+        sets: [{ weight: 0, reps: 0 }]
+    });
+    saveState();
+    renderFitnessDashboard();
+}
+
+window.addFitnessSet = function(dateStr, exerciseIndex) {
+    if (fitnessLogs[dateStr] && fitnessLogs[dateStr][exerciseIndex]) {
+        const sets = fitnessLogs[dateStr][exerciseIndex].sets;
+        let lastWeight = 0;
+        let lastReps = 0;
+        if (sets.length > 0) {
+            lastWeight = sets[sets.length - 1].weight;
+            lastReps = sets[sets.length - 1].reps;
+        }
+        sets.push({ weight: lastWeight, reps: lastReps });
+        saveState();
+        renderFitnessDashboard();
+    }
+}
+
+window.removeFitnessSet = function(dateStr, exerciseIndex, setIndex) {
+    if (fitnessLogs[dateStr] && fitnessLogs[dateStr][exerciseIndex]) {
+        fitnessLogs[dateStr][exerciseIndex].sets.splice(setIndex, 1);
+        saveState();
+        renderFitnessDashboard();
+    }
+}
+
+window.removeFitnessExercise = function(dateStr, exerciseIndex) {
+    if (fitnessLogs[dateStr]) {
+        fitnessLogs[dateStr].splice(exerciseIndex, 1);
+        saveState();
+        renderFitnessDashboard();
+    }
+}
+
+window.updateFitnessSet = function(dateStr, exerciseIndex, setIndex, field, value) {
+    if (fitnessLogs[dateStr] && fitnessLogs[dateStr][exerciseIndex] && fitnessLogs[dateStr][exerciseIndex].sets[setIndex]) {
+        fitnessLogs[dateStr][exerciseIndex].sets[setIndex][field] = parseFloat(value) || 0;
+        saveState();
+    }
+}
+
+window.updateFitnessExerciseName = function(dateStr, exerciseIndex, newName) {
+    if (fitnessLogs[dateStr] && fitnessLogs[dateStr][exerciseIndex]) {
+        fitnessLogs[dateStr][exerciseIndex].name = newName;
+        saveState();
+    }
+}
+
+let editingTemplateId = null;
+
+window.showFitnessTemplateList = function() {
+    const listView = document.getElementById('fitness-template-list-view');
+    const editView = document.getElementById('fitness-template-edit-view');
+    if (listView) {
+        listView.classList.remove('hidden');
+        listView.classList.add('flex');
+    }
+    if (editView) {
+        editView.classList.remove('flex');
+        editView.classList.add('hidden');
+    }
+
+    const list = document.getElementById('fitness-template-list');
+    if (!list) return;
+    list.innerHTML = '';
+
+    fitnessTemplates.forEach(tpl => {
+        let grad = 'from-teal-500/20 to-emerald-500/10 text-teal-600 dark:text-teal-400';
+        let icon = 'fitness_center';
+        if (tpl.id === 'tpl-chest' || tpl.name.includes('Göğüs')) {
+            grad = 'from-emerald-500/25 to-teal-500/10 text-primary dark:text-primary-fixed';
+            icon = 'fitness_center';
+        } else if (tpl.id === 'tpl-triceps' || tpl.name.includes('Arka Kol')) {
+            grad = 'from-purple-500/20 to-pink-500/10 text-purple-600 dark:text-purple-400';
+            icon = 'exercise';
+        } else if (tpl.id === 'tpl-legs' || tpl.name.includes('Bacak')) {
+            grad = 'from-blue-500/20 to-indigo-500/10 text-blue-600 dark:text-blue-400';
+            icon = 'sports_gymnastics';
+        } else if (tpl.id === 'tpl-cardio' || tpl.name.includes('Kardiyo')) {
+            grad = 'from-amber-500/20 to-orange-500/10 text-amber-600 dark:text-amber-400';
+            icon = 'directions_run';
+        }
+        const bannerHtml = `<div class="w-full h-16 rounded-t-2xl bg-gradient-to-tr ${grad} flex items-center justify-center mb-3"><span class="material-symbols-outlined text-[32px]">${icon}</span></div>`;
+
+        const item = document.createElement('div');
+        item.className = "w-full bg-surface-container dark:bg-white/5 rounded-2xl pb-5 hover:bg-surface-container-high transition-all flex flex-col gap-1 group cursor-pointer border border-transparent overflow-hidden";
+        item.innerHTML = `
+            ${bannerHtml}
+            <div class="px-5 flex items-center justify-between gap-4 w-full">
+                <div class="flex-1 flex flex-col gap-1.5 text-left" onclick="applyFitnessTemplate('${tpl.id}'); closeFitnessTemplateModal();">
+                    <div class="flex items-center gap-2">
+                        <span class="font-headline-sm text-on-surface font-bold">${tpl.name}</span>
+                        <span class="material-symbols-outlined text-[18px] text-primary opacity-0 group-hover:opacity-100 transition-opacity">play_circle</span>
+                    </div>
+                    <p class="text-[12px] text-on-surface-variant font-body-sm line-clamp-2">${tpl.exercises.join(', ')}</p>
+                </div>
+                <button onclick="event.stopPropagation(); openFitnessTemplateEditor('${tpl.id}')" class="w-10 h-10 rounded-full hover:bg-surface-container-high/60 flex items-center justify-center text-on-surface-variant flex-shrink-0" title="Programı Düzenle">
+                    <span class="material-symbols-outlined text-[20px]">edit</span>
+                </button>
+            </div>
+        `;
+        list.appendChild(item);
+    });
+};
+
+window.openFitnessTemplateModal = function() {
+    const modal = document.getElementById('fitness-template-modal');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    showFitnessTemplateList();
+};
+
+window.closeFitnessTemplateModal = function() {
+    const modal = document.getElementById('fitness-template-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+};
+
+window.openFitnessTemplateEditor = function(templateId = null) {
+    editingTemplateId = templateId;
+
+    const listView = document.getElementById('fitness-template-list-view');
+    const editView = document.getElementById('fitness-template-edit-view');
+    if (listView) {
+        listView.classList.remove('flex');
+        listView.classList.add('hidden');
+    }
+    if (editView) {
+        editView.classList.remove('hidden');
+        editView.classList.add('flex');
+    }
+
+    const titleEl = document.getElementById('fitness-template-editor-title');
+    const nameInput = document.getElementById('fitness-template-name-input');
+    const exercisesContainer = document.getElementById('fitness-template-exercises-container');
+    const deleteBtn = document.getElementById('btn-delete-fitness-template');
+
+    if (exercisesContainer) exercisesContainer.innerHTML = '';
+
+    if (templateId) {
+        if (titleEl) titleEl.textContent = "Programı Düzenle";
+        const tpl = fitnessTemplates.find(t => t.id === templateId);
+        if (tpl) {
+            if (nameInput) nameInput.value = tpl.name;
+            tpl.exercises.forEach(exName => addExerciseToTemplateEditor(exName));
+        }
+        if (deleteBtn) deleteBtn.classList.remove('hidden');
+    } else {
+        if (titleEl) titleEl.textContent = "Yeni Program";
+        if (nameInput) nameInput.value = '';
+        addExerciseToTemplateEditor('');
+        if (deleteBtn) deleteBtn.classList.add('hidden');
+    }
+};
+
+window.addExerciseToTemplateEditor = function(value = '') {
+    const container = document.getElementById('fitness-template-exercises-container');
+    if (!container) return;
+
+    const row = document.createElement('div');
+    row.className = "flex items-center gap-2 template-exercise-row";
+    row.innerHTML = `
+        <div class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-[20px]">fitness_center</span>
+        </div>
+        <input type="text" value="${value}" class="flex-1 p-3 rounded-xl bg-surface-container text-on-surface text-sm border-none focus:ring-2 focus:ring-primary-container outline-none" placeholder="Hareket Adı (Örn: Lat Pulldown)">
+        <button onclick="this.parentElement.remove()" class="w-8 h-8 flex items-center justify-center text-error hover:bg-error/10 rounded-full shrink-0 transition-colors">
+            <span class="material-symbols-outlined text-[20px]">delete</span>
+        </button>
+    `;
+    container.appendChild(row);
+    if (!value) {
+        const input = row.querySelector('input');
+        if (input) input.focus();
+    }
+};
+
+window.saveFitnessTemplate = function() {
+    const nameInput = document.getElementById('fitness-template-name-input');
+    const name = nameInput ? nameInput.value.trim() : '';
+    if (!name) {
+        alert("Lütfen program adı girin!");
+        return;
+    }
+
+    const container = document.getElementById('fitness-template-exercises-container');
+    const exerciseInputs = container ? container.querySelectorAll('input') : [];
+    const exercises = [];
+    exerciseInputs.forEach(input => {
+        const val = input.value.trim();
+        if (val) exercises.push(val);
+    });
+
+    if (exercises.length === 0) {
+        alert("Lütfen en az bir hareket ekleyin!");
+        return;
+    }
+
+    if (editingTemplateId) {
+        const tpl = fitnessTemplates.find(t => t.id === editingTemplateId);
+        if (tpl) {
+            tpl.name = name;
+            tpl.exercises = exercises;
+        }
+    } else {
+        const newId = "tpl-" + Date.now();
+        fitnessTemplates.push({
+            id: newId,
+            name: name,
+            exercises: exercises
+        });
+    }
+
+    localStorage.setItem('fitnessTemplates', JSON.stringify(fitnessTemplates));
+    showFitnessTemplateList();
+};
+
+window.deleteFitnessTemplate = function() {
+    if (!editingTemplateId) return;
+
+    if (confirm("Bu program şablonunu silmek istediğinize emin misiniz?")) {
+        fitnessTemplates = fitnessTemplates.filter(t => t.id !== editingTemplateId);
+        localStorage.setItem('fitnessTemplates', JSON.stringify(fitnessTemplates));
+        showFitnessTemplateList();
+    }
+};
+
+window.applyFitnessTemplate = function(templateId) {
+    const tpl = fitnessTemplates.find(t => t.id === templateId);
+    if (!tpl) return;
+
+    if (!fitnessLogs[selectedFitnessDate]) fitnessLogs[selectedFitnessDate] = [];
+
+    tpl.exercises.forEach(exName => {
+        fitnessLogs[selectedFitnessDate].push({
+            id: "ex-" + Date.now() + Math.floor(Math.random() * 1000),
+            name: exName,
+            sets: [{ weight: 0, reps: 0 }]
+        });
+    });
+    saveState();
+    renderFitnessDashboard();
+};
+
+window.openFitnessChartModal = function() {
+    const modal = document.getElementById('fitness-chart-modal');
+    const select = document.getElementById('fitness-chart-exercise-select');
+    if (!modal || !select) return;
+
+    // Reset range to weekly on open
+    selectedFitnessChartRange = 'weekly';
+    const btnWeekly = document.getElementById('btn-fit-weekly');
+    const btnMonthly = document.getElementById('btn-fit-monthly');
+    const btnYearly = document.getElementById('btn-fit-yearly');
+    if (btnWeekly && btnMonthly && btnYearly) {
+        [btnWeekly, btnMonthly, btnYearly].forEach(btn => {
+            btn.className = "flex-1 py-2 text-xs font-semibold rounded-xl transition-all duration-300 text-on-surface-variant";
+        });
+        btnWeekly.className = "flex-1 py-2 text-xs font-semibold rounded-xl transition-all duration-300 bg-primary text-white";
+    }
+
+    // Populate unique exercise names across all logs
+    const allExercises = new Set();
+    Object.values(fitnessLogs).forEach(logs => {
+        logs.forEach(ex => {
+            if (ex.name && ex.name.trim() !== '') {
+                allExercises.add(ex.name.trim());
+            }
+        });
+    });
+
+    select.innerHTML = '<option value="">Hareket Seçin</option>';
+    Array.from(allExercises).sort().forEach(name => {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        select.appendChild(opt);
+    });
+
+    const strokeEl = document.getElementById('fitness-chart-stroke');
+    if (strokeEl) strokeEl.setAttribute('d', '');
+    const prLineEl = document.getElementById('fitness-chart-pr-line');
+    if (prLineEl) prLineEl.setAttribute('opacity', '0');
+    
+    const prWidget = document.getElementById('fitness-pr-widget');
+    if (prWidget) prWidget.classList.add('hidden');
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+};
+
+window.closeFitnessChartModal = function() {
+    const modal = document.getElementById('fitness-chart-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+};
+
+window.switchFitnessChartRange = function(range) {
+    selectedFitnessChartRange = range;
+    
+    const btnWeekly = document.getElementById('btn-fit-weekly');
+    const btnMonthly = document.getElementById('btn-fit-monthly');
+    const btnYearly = document.getElementById('btn-fit-yearly');
+    
+    if (btnWeekly && btnMonthly && btnYearly) {
+        [btnWeekly, btnMonthly, btnYearly].forEach(btn => {
+            btn.className = "flex-1 py-2 text-xs font-semibold rounded-xl transition-all duration-300 text-on-surface-variant";
+        });
+        
+        const activeBtn = range === 'weekly' ? btnWeekly : range === 'monthly' ? btnMonthly : btnYearly;
+        activeBtn.className = "flex-1 py-2 text-xs font-semibold rounded-xl transition-all duration-300 bg-primary text-white";
+    }
+    
+    renderFitnessChart();
+};
+
+window.renderFitnessChart = function() {
+    const select = document.getElementById('fitness-chart-exercise-select');
+    const strokeEl = document.getElementById('fitness-chart-stroke');
+    const minLabel = document.getElementById('fitness-chart-min-label');
+    const maxLabel = document.getElementById('fitness-chart-max-label');
+    const midLabel = document.getElementById('fitness-chart-mid-label');
+    const descEl = document.getElementById('fitness-chart-desc');
+    const prLineEl = document.getElementById('fitness-chart-pr-line');
+    
+    const prWidget = document.getElementById('fitness-pr-widget');
+    const prValEl = document.getElementById('fitness-pr-val');
+    const prProgressEl = document.getElementById('fitness-pr-progress');
+    const prCurrentEl = document.getElementById('fitness-pr-current');
+    const prPercentEl = document.getElementById('fitness-pr-percent');
+    
+    if (!select || !strokeEl) return;
+    
+    const exName = select.value;
+    if (!exName) {
+        strokeEl.setAttribute('d', '');
+        if (prLineEl) prLineEl.setAttribute('opacity', '0');
+        if (prWidget) prWidget.classList.add('hidden');
+        return;
+    }
+
+    // Extract all historical max weights for this exercise
+    const sortedAllHistory = [];
+    Object.keys(fitnessLogs).forEach(dateStr => {
+        const logsForDay = fitnessLogs[dateStr];
+        let maxWeight = 0;
+        let found = false;
+        logsForDay.forEach(ex => {
+            if (ex.name.trim() === exName) {
+                ex.sets.forEach(set => {
+                    if (set.weight > maxWeight) maxWeight = set.weight;
+                    found = true;
+                });
+            }
+        });
+        if (found) {
+            sortedAllHistory.push({ date: dateStr, weight: maxWeight });
+        }
+    });
+
+    // Sort by date ascending
+    sortedAllHistory.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    if (sortedAllHistory.length === 0) {
+        strokeEl.setAttribute('d', '');
+        if (prLineEl) prLineEl.setAttribute('opacity', '0');
+        if (prWidget) prWidget.classList.add('hidden');
+        descEl.textContent = "Bu hareket için yeterli veri bulunamadı.";
+        return;
+    }
+
+    // All-time PR
+    let allTimePR = 0;
+    sortedAllHistory.forEach(h => {
+        if (h.weight > allTimePR) allTimePR = h.weight;
+    });
+
+    // Filter by selected range
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const rangeDays = selectedFitnessChartRange === 'weekly' ? 7 : selectedFitnessChartRange === 'monthly' ? 30 : 365;
+    const cutoffDate = new Date(today);
+    cutoffDate.setDate(today.getDate() - rangeDays);
+    
+    const filteredHistory = sortedAllHistory.filter(h => new Date(h.date) >= cutoffDate);
+
+    if (filteredHistory.length === 0) {
+        strokeEl.setAttribute('d', '');
+        if (prLineEl) prLineEl.setAttribute('opacity', '0');
+        if (prWidget) prWidget.classList.add('hidden');
+        descEl.textContent = `Son ${rangeDays} günde bu hareket için kayıt bulunamadı. (Tüm Zamanlar Rekoru: ${allTimePR} kg)`;
+        return;
+    }
+
+    // Find min and max of filtered range
+    let minW = filteredHistory[0].weight;
+    let maxW = filteredHistory[0].weight;
+    filteredHistory.forEach(h => {
+        if (h.weight < minW) minW = h.weight;
+        if (h.weight > maxW) maxW = h.weight;
+    });
+
+    // PR must fit in the coordinate space!
+    const chartMaxWeight = Math.max(maxW, allTimePR);
+
+    // Add 15% padding top and bottom
+    let range = chartMaxWeight - minW;
+    if (range === 0) range = chartMaxWeight > 0 ? chartMaxWeight * 0.3 : 10;
+    
+    const displayMin = Math.max(0, minW - (range * 0.15));
+    const displayMax = chartMaxWeight + (range * 0.15);
+    const displayRange = displayMax - displayMin;
+
+    const isCardio = isCardioExercise(exName);
+    const unit = isCardio ? " km/s" : " kg";
+
+
+
+    // Generate path points
+    const points = [];
+    filteredHistory.forEach((h, index) => {
+        const xStep = filteredHistory.length > 1 ? 400 / (filteredHistory.length - 1) : 0;
+        const x = 10 + xStep * index;
+        const relativeY = (h.weight - displayMin) / displayRange; // 0 to 1
+        const y = 110 - (100 * relativeY); // map to 10-110 in SVG
+        points.push({ x, y });
+    });
+
+    const strokePath = getSplinePath(points);
+    strokeEl.setAttribute('d', strokePath);
+
+    // Draw the PR horizontal line
+    if (prLineEl) {
+        const prRelativeY = (allTimePR - displayMin) / displayRange;
+        const prY = 110 - (100 * prRelativeY);
+        prLineEl.setAttribute('y1', prY);
+        prLineEl.setAttribute('y2', prY);
+        prLineEl.setAttribute('opacity', '0.7');
+    }
+
+    // Render the PR Widget details
+    const latestW = filteredHistory[filteredHistory.length - 1].weight;
+    const prPercent = allTimePR > 0 ? Math.min(100, Math.round((latestW / allTimePR) * 100)) : 0;
+
+    if (prWidget && prValEl && prProgressEl && prCurrentEl && prPercentEl) {
+        prWidget.classList.remove('hidden');
+        prValEl.textContent = `${allTimePR}${unit}`;
+        prCurrentEl.textContent = isCardio ? `Son Hız: ${latestW}${unit}` : `Son Ağırlık: ${latestW}${unit}`;
+        prPercentEl.textContent = `Rekora Yakınlık: %${prPercent}`;
+        prProgressEl.style.width = `${prPercent}%`;
+    }
+    
+    descEl.textContent = `Son ${rangeDays} günde ${filteredHistory.length} günlük veri analiz edildi. (Son Kayıt: ${latestW}${unit.trim()})`;
 };
 
 // Boot

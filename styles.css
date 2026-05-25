@@ -784,3 +784,100 @@ input[type="text"]:focus, textarea:focus {
     -ms-overflow-style: none !important;
     scrollbar-width: none !important;
 }
+
+/* S23 and Mobile Optimization Overrides */
+@media (max-width: 480px) {
+    /* Bottom Navigation Bar Optimization */
+    nav.fixed.bottom-0 {
+        max-width: 100% !important;
+        border-radius: 24px 24px 0 0 !important;
+        padding-left: 6px !important;
+        padding-right: 6px !important;
+        height: 62px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-around !important;
+        gap: 1px !important;
+    }
+    
+    .nav-btn {
+        padding-top: 6px !important;
+        padding-bottom: 6px !important;
+        padding-left: 2px !important;
+        padding-right: 2px !important;
+        border-radius: 16px !important;
+        height: 46px !important;
+        min-width: 36px !important;
+        flex: 1 !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+
+    .nav-btn span.font-label-sm {
+        display: none !important;
+    }
+
+    .nav-btn.nav-btn-active {
+        flex: 1.7 !important; /* expand active tab */
+        scale: 1 !important; /* disable heavy zoom on mobile */
+    }
+
+    .nav-btn.nav-btn-active span.font-label-sm {
+        display: block !important;
+        font-size: 8px !important;
+        font-weight: 700 !important;
+        margin-top: 1px !important;
+        animation: fadeInTabLabel 0.2s ease-out forwards;
+    }
+    
+    /* FAB Button custom handling */
+    #nav-btn-add-habit {
+        transform: translateY(-8px) !important;
+        min-width: 42px !important;
+        flex: 0.9 !important;
+    }
+    #nav-btn-add-habit div {
+        width: 38px !important;
+        height: 38px !important;
+    }
+    #nav-btn-add-habit div span {
+        font-size: 22px !important;
+    }
+    
+    /* Active-tab FAB padding */
+    #nav-btn-add-habit.nav-btn-active div {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(0, 107, 90, 0.3);
+    }
+    
+    /* Screen paddings for S23 narrow screens */
+    .screen-view {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+    
+    .fitness-card {
+        padding: 16px !important;
+        border-radius: 20px !important;
+    }
+
+    #fitness-timeline-wrapper {
+        margin-left: -4px !important;
+        margin-right: -4px !important;
+    }
+    
+    #fitness-timeline button {
+        width: 36px !important;
+        height: 36px !important;
+    }
+}
+
+@keyframes fadeInTabLabel {
+    from {
+        opacity: 0;
+        transform: translateY(2px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
